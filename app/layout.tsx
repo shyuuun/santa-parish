@@ -1,6 +1,18 @@
-import Navbar from "@/components/navbar";
 import "./globals.css";
-import Footer from "@/components/footer";
+
+import { Arvo, Inter } from "next/font/google";
+
+export const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+	display: "swap",
+});
+
+export const arvo = Arvo({
+	subsets: ["latin"],
+	variable: "--font-arvo",
+	weight: "700",
+});
 
 export default function RootLayout({
 	children,
@@ -9,10 +21,8 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" title="Santa Lucia Parish Multipurpose Cooperative">
-			<body>
-				<Navbar />
+			<body className={`${inter.variable} ${arvo.variable}`}>
 				{children}
-				<Footer />
 			</body>
 		</html>
 	);

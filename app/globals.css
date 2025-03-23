@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
+:root {
+	--font-inter: "Inter", sans-serif;
+	--font-arvo: "Arvo", serif;
+}
 
-.flx-center {
-  @apply flex items-center justify-center;
+html {
+	font-family: var(--font-inter);
+}
+
+.font-sans {
+	font-family: var(--font-inter);
+}
+
+.font-serif {
+	font-family: var(--font-arvo);
 }

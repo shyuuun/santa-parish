@@ -9,14 +9,20 @@ import {
 	PersonStanding,
 	Shield,
 } from "lucide-react";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 
-export default function Home() {
+import Navbar from "@/src/components/navbar";
+import Footer from "@/src/components/footer";
+import { createClient } from "../utils/supabase/server";
+
+export default async function Home() {
+	const supabase = await createClient();
+	const user = await supabase.auth.getUser();
+
+	console.log(`Current User ${user.data.user?.id}`);
 	return (
 		<>
 			<Navbar />
-			<main className="bg-red-50">
+			<main className="bg-red-50" id="home">
 				<div className="h-screen flex justify-center flex-col items-center relative mb-8">
 					<section className="absolute inset-0">
 						<figure>
@@ -40,7 +46,10 @@ export default function Home() {
 						</p>
 					</section>
 				</div>
-				<section className="max-w-3/4 mx-auto gap-4 flex flex-col md:flex-row items-center justify-around mb-8">
+				<section
+					className="max-w-3/4 mx-auto gap-4 flex flex-col md:flex-row items-center justify-around mb-8"
+					id="about-us"
+				>
 					<h1 className="text-5xl font-bold mb-4 text-center font-serif text-sky-800">
 						About Us
 					</h1>
@@ -112,7 +121,7 @@ export default function Home() {
 						/>
 					</article>
 				</section>
-				<section className="max-w-3/4 mx-auto p-12 ">
+				<section className="max-w-3/4 mx-auto p-12 " id="announce">
 					<h1 className="text-center text-2xl md:text-5xl  font-serif">
 						Announcements
 					</h1>

@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Menu, ChevronUp } from "lucide-react";
+
 import logo from "@/public/logo.svg";
+import Link from "next/link";
 
 export default function Navbar() {
 	const [yPos, setYPos] = useState(0);
@@ -72,10 +74,15 @@ export default function Navbar() {
 					}`}
 				>
 					<ul className="flex flex-col md:flex-row  items-center justify-center gap-4 py-4">
-						<li>Home</li>
-						<li>Announments</li>
-						<li>Contact Us</li>
-						<li>About Us</li>
+						<li>
+							<Link href={"#home"}>Home</Link>
+						</li>
+						<li>
+							<Link href={"#about-us"}>About Us</Link>
+						</li>
+						<li>
+							<Link href={"#announce"}>Announcement</Link>
+						</li>
 					</ul>
 				</section>
 			</div>

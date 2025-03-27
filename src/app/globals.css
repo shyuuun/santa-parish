@@ -7,6 +7,7 @@
 
 html {
 	font-family: var(--font-inter);
+	scroll-behavior: smooth;
 }
 
 .font-sans {

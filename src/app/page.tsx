@@ -10,7 +10,7 @@ import {
 	Shield,
 } from "lucide-react";
 
-import Navbar from "@/src/components/navbar";
+import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/footer";
 import { createClient } from "../utils/supabase/server";
 

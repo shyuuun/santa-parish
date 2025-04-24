@@ -1,3 +1,6 @@
+// TODO : Make the CSS more readable
+
+import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 export default function DashboardLayout({
 	children,
@@ -7,7 +10,10 @@ export default function DashboardLayout({
 	return (
 		<main className={` sidebar grid grid-cols-5 h-screen`}>
 			<Sidebar />
-			<div className="col-span-4">{children}</div>
+			<div className="col-span-4">
+				<Navbar />
+				{children}
+			</div>
 		</main>
 	);
 }

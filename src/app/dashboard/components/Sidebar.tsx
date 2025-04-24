@@ -1,9 +1,22 @@
 import Link from "next/link";
+import logo from "@/public/logo.svg";
+import Image from "next/image";
 
 export default function Sidebar() {
 	return (
 		<aside className="bg-red-500 text-white flex flex-col py-4">
-			<section>Header</section>
+			<section className="flex items-center justify-center gap-2 mb-4 px-2">
+				<Image
+					className="rounded-full"
+					src={logo}
+					width={48}
+					height={48}
+					alt="Santa Parish Logo"
+				/>
+				<h1 className="font-serif">
+					Santa Lucia Parish Multipurpose Cooperative
+				</h1>
+			</section>
 			<ul className="flex flex-col items-center justify-center">
 				<SidebarLink location="/dashboard">Home</SidebarLink>
 				<SidebarLink location="/dashboard/sectionA">
@@ -28,8 +41,11 @@ function SidebarLink({
 	location: string;
 }) {
 	return (
-		<li className="py-4 px-2 w-full text-center hover:bg-gray-500 transition duration-200 ease-in-out">
-			<Link href={location}>{children}</Link>
-		</li>
+		<Link
+			className="py-4 px-2 w-full hover:bg-gray-500 transition duration-200 ease-in-out font-serif"
+			href={location}
+		>
+			<li>{children}</li>
+		</Link>
 	);
 }

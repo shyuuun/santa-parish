@@ -8,8 +8,11 @@
 ## Todos
 
 -   [] Login / Register with confirmation status
--   [] RWD 
+-   [] Login with SMS
+-   [] RWD
 -   [] Dashboard
+-   [] WYSIWYG text editor
+-   [] Adding a announcements for the admin side
 -   [] Loan
 -   [] other features to be added...
 

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import Navbar from "@/src/components/Navbar";
-import Footer from "@/src/components/footer";
+import Footer from "@/src/components/Footer";
 import { createClient } from "../utils/supabase/server";
 
 export default async function Home() {

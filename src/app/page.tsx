@@ -36,7 +36,7 @@ export default async function Home() {
 						</figure>
 					</section>
 					<section className="max-w-3/4 mx-auto relative text-white">
-						<h1 className="text-4xl text-center mb-4 font-serif">
+						<h1 className="text-center">
 							Empowering our community through financial growth
 							and cooperation
 						</h1>

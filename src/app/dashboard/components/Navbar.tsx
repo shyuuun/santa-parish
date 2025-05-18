@@ -4,7 +4,7 @@
 
 export default function Navbar() {
 	return (
-		<nav className="bg-red-500 text-white flex items-center flex-end py-4">
+		<nav className={`dashboard_nav`}>
 			<h1>Nice</h1>
 		</nav>
 	);

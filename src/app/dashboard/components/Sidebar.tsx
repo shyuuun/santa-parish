@@ -1,10 +1,17 @@
 import Link from "next/link";
 import logo from "@/public/logo.svg";
 import Image from "next/image";
+import { RouteLink } from "@/src/utils/types";
+import { usePathname } from "next/navigation";
 
-export default function Sidebar() {
+interface SidebarProps {
+	links: RouteLink[];
+}
+
+export default function Sidebar({ links }: SidebarProps) {
+	const pathname = usePathname();
 	return (
-		<aside className="bg-red-500 text-white flex flex-col py-4">
+		<aside className="flex flex-col dashboard_sidebar">
 			<section className="flex items-center justify-center gap-2 mb-4 px-2">
 				<Image
 					className="rounded-full"
@@ -13,39 +20,39 @@ export default function Sidebar() {
 					height={48}
 					alt="Santa Parish Logo"
 				/>
-				<h1 className="font-serif">
+				<p className="font-serif">
 					Santa Lucia Parish Multipurpose Cooperative
-				</h1>
+				</p>
 			</section>
 			<ul className="flex flex-col items-center justify-center">
-				<SidebarLink location="/dashboard">Home</SidebarLink>
-				<SidebarLink location="/dashboard/sectionA">
-					Section 1
-				</SidebarLink>
-				<SidebarLink location="/dashboard/sectionB">
-					Section 2
-				</SidebarLink>
-				<SidebarLink location="/dashboard/sectionC">
-					Section 3
-				</SidebarLink>
+				{links.map((link) => (
+					<SidebarLink
+						key={link.id}
+						location={link.location}
+						routeName={link.name}
+						isActive={pathname === link.location}
+					/>
+				))}
 			</ul>
 		</aside>
 	);
 }
 
 function SidebarLink({
-	children,
+	routeName,
 	location,
+	isActive,
 }: {
-	children: React.ReactNode;
+	routeName: string;
 	location: string;
+	isActive: boolean;
 }) {
 	return (
 		<Link
-			className="py-4 px-2 w-full hover:bg-gray-500 transition duration-200 ease-in-out font-serif"
+			className={`sidebar_link ${isActive ? "active" : ""}`}
 			href={location}
 		>
-			<li>{children}</li>
+			<li>{routeName}</li>
 		</Link>
 	);
 }

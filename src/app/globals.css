@@ -17,3 +17,36 @@ html {
 .font-serif {
 	font-family: var(--font-arvo);
 }
+
+@layer base {
+	h1 {
+		font-size: var(--text-4xl);
+		font-weight: var(--font-weight-bold);
+		font-family: var(--font-arvo);
+	}
+	h2 {
+		font-size: var(--text-2xl);
+		font-weight: var(--font-weight-bold);
+		font-family: var(--font-arvo);
+	}
+	p {
+		font-family: var(--font-inter);
+	}
+}
+
+@layer components {
+	.dashboard_nav {
+		@apply bg-red-500 text-white py-2 px-4 flex items-center justify-end;
+	}
+	.dashboard_sidebar {
+		@apply bg-red-500 text-white py-4;
+	}
+
+	.sidebar_link {
+		@apply py-4 px-2 w-full hover:bg-gray-500 transition duration-200 ease-in-out font-serif;
+
+		&.active { 
+			@apply bg-red-600
+		}
+	}
+}

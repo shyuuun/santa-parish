@@ -29,6 +29,17 @@ html {
 		font-weight: var(--font-weight-bold);
 		font-family: var(--font-arvo);
 	}
+	h3 {
+		font-size: var(--text-lg);
+		font-weight: 600;
+		font-family: var(--font-arvo);
+	}
+	h4 {
+		font-size: var(--text-md);
+		font-weight: 500;
+		font-family: var(--font-inter);
+	}
+
 	p {
 		font-family: var(--font-inter);
 	}
@@ -37,6 +48,9 @@ html {
 @layer utilities {
 	.flex-center {
 		@apply flex justify-center items-center;
+	}
+	.flex-column {
+		@apply flex flex-col;
 	}
 }
 
@@ -60,8 +74,7 @@ html {
 		@apply flex flex-col p-4 shadow;
 
 		> p {
-			font-weight: 700;
-			font-size: 3rem;
+			font-size: 2rem;
 			text-align: right;
 		}
 	}

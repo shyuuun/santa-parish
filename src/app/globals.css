@@ -34,19 +34,39 @@ html {
 	}
 }
 
+@layer utilities {
+	.flex-center {
+		@apply flex justify-center items-center;
+	}
+}
+
 @layer components {
 	.dashboard_nav {
 		@apply bg-red-500 text-white py-2 px-4 flex items-center justify-end;
 	}
 	.dashboard_sidebar {
-		@apply bg-red-500 text-white py-4;
+		@apply bg-red-500 text-white py-4 max-w-64;
 	}
 
 	.sidebar_link {
-		@apply py-4 px-2 w-full hover:bg-gray-500 transition duration-200 ease-in-out font-serif;
+		@apply py-4 px-2 w-full hover:bg-gray-500 transition duration-200 ease-in-out;
 
-		&.active { 
-			@apply bg-red-600
+		&.active {
+			@apply bg-red-600;
 		}
+	}
+
+	.dashboard_card {
+		@apply flex flex-col p-4 shadow;
+
+		> p {
+			font-weight: 700;
+			font-size: 3rem;
+			text-align: right;
+		}
+	}
+
+	.btn {
+		@apply flex justify-center items-center;
 	}
 }

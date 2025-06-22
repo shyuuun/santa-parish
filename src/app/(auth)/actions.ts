@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/src/utils/supabase/server";
+import { getUserRole } from "@/src/utils/supabaseUtils";
 
 export type AuthStatus = {
 	type: string;
@@ -22,21 +23,38 @@ export async function login(formData: FormData) {
 	const { data, error } = await supabase.auth.signInWithPassword(dataForm);
 
 	console.log(`----------> ${data.user?.email}`);
-
-	// if (error) {
-	// 	console.log(`--------------> ${error}`);
-	// 	// redirect("/error");
-
-	// 	return `ERROR: ${error}`;
-	// }
+	console.log(`----------> ${data.user?.id}`);
 
 	if (error) {
 		return {
 			type: "failed",
 			msg: `${error}`,
 		};
-	} else {
-		redirect("/account");
+	}
+
+	const getRole = await getUserRole(supabase, data.user?.id || "");
+
+	console.log(`----------> User role: ${getRole}`);
+
+	if (getRole === null) {
+		return {
+			type: "failed",
+			msg: `Error fetching user role.`,
+		};
+	}
+
+	switch (getRole.toString()) {
+		case "1":
+			console.log("ADMIN");
+			redirect("/dashboard");
+		case "2":
+			console.log("Verified");
+			redirect("/account");
+		case "3":
+			console.log("Unverified");
+			redirect("/account");
+		default:
+			redirect("/login");
 	}
 
 	// return `You login as ${data.user?.email}`;

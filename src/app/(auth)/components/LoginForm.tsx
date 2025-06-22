@@ -18,7 +18,6 @@ export default function LoginForm() {
 		{ type: "", msg: "" } // Initial state
 	);
 
-	console.log(`---> FormState:${formState.type}`);
 	return (
 		<>
 			{formState.msg && (

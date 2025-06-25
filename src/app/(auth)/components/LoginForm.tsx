@@ -5,6 +5,9 @@ import { AuthStatus, login } from "../actions";
 import Loader from "@/src/components/Loader";
 import Link from "next/link";
 import Alert from "@/src/components/Alert";
+import { Label } from "@/src/components/shadcn/label";
+import { Input } from "@/src/components/shadcn/input";
+import Button from "@/src/components/Button";
 
 export default function LoginForm() {
 	// TODO: Make it simple
@@ -34,8 +37,8 @@ export default function LoginForm() {
 			)}
 			<form action={formAction}>
 				<div className="mb-4">
-					<label>Email</label>
-					<input
+					<Label>Email</Label>
+					<Input
 						id="email"
 						name="email"
 						type="email"
@@ -44,8 +47,8 @@ export default function LoginForm() {
 				</div>
 
 				<div className="mb-4">
-					<label>Password</label>
-					<input
+					<Label>Password</Label>
+					<Input
 						name="password"
 						id="password"
 						type="password"
@@ -54,9 +57,9 @@ export default function LoginForm() {
 				</div>
 
 				<div className="flex items-center justify-between">
-					<button className="btn" type="submit">
+					<Button>
 						{pending ? <Loader size="sm" /> : "Sign In"}
-					</button>
+					</Button>
 					{/* // TODO: Change it when implemented forgot password */}
 					<Link className="link" href="/register">
 						Register

@@ -10,25 +10,36 @@ export default function DashboardLayout({
 }) {
 	const links: RouteLink[] = [
 		{
-			id: 1,
+			id: "home",
 			name: "Home",
 			location: "/dashboard",
 			isActive: false,
 		},
 		{
-			id: 2,
+			id: "users-dropdown",
 			name: "Users",
 			location: "/dashboard/users",
 			isActive: false,
+			isDropdown: true,
+			dropdownItems: [
+				{
+					name: "All Users",
+					location: "/dashboard/users",
+				},
+				{
+					name: "Admins",
+					location: "/dashboard/admins",
+				},
+			],
 		},
 		{
-			id: 3,
+			id: "loans",
 			name: "Loans",
 			location: "/dashboard/loans",
 			isActive: false,
 		},
 		{
-			id: 4,
+			id: "announcements",
 			name: "Announcement",
 			location: "/dashboard/announcements",
 			isActive: false,

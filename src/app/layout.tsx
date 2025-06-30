@@ -1,3 +1,4 @@
+import { Toaster } from "../components/shadcn/sonner";
 import "./globals.css";
 
 import { Arvo, Inter } from "next/font/google";
@@ -23,6 +24,8 @@ export default function RootLayout({
 		<html lang="en" title="Santa Lucia Parish Multipurpose Cooperative">
 			<body className={`${inter.variable} ${arvo.variable}`}>
 				{children}
+
+				<Toaster />
 			</body>
 		</html>
 	);

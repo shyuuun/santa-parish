@@ -18,13 +18,19 @@ import {
 
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
+import AnnouncementsSection from "@/src/components/AnnouncementsSection";
 import { createClient } from "../utils/supabase/server";
 
 export default async function Home() {
 	const supabase = await createClient();
-	const user = await supabase.auth.getUser();
 
-	console.log(`Current User ${user.data.user?.id}`);
+	// Fetch initial announcements for server-side rendering
+	const { data: initialAnnouncements, count } = await supabase
+		.from("announcements")
+		.select("*", { count: "exact" })
+		.order("created_at", { ascending: false })
+		.range(0, 2);
+
 	return (
 		<>
 			<Navbar />
@@ -198,15 +204,20 @@ export default async function Home() {
 						</AccordionItem>
 					</Accordion>
 				</section>
-				<section className="max-w-3/4 mx-auto p-12 " id="announce">
-					<h1 className="text-center text-2xl md:text-5xl  font-serif">
-						Announcements
-					</h1>
-					<p className="text-center">To be Added</p>
+				<section className="bg-white py-16" id="announce">
+					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+						<h1 className="text-center text-4xl md:text-5xl font-serif mb-12 text-sky-800">
+							Latest Announcements
+						</h1>
+						<AnnouncementsSection
+							initialAnnouncements={initialAnnouncements || []}
+							totalCount={count || 0}
+						/>
+					</div>
 				</section>
-			</main>
 
-			<Footer />
+				<Footer />
+			</main>
 		</>
 	);
 }

@@ -22,23 +22,30 @@ import {
 import {
 	Pagination,
 	PaginationContent,
-	PaginationEllipsis,
 	PaginationItem,
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
 } from "@/src/components/shadcn/pagination";
+
 import Search from "../admins/components/Search";
 import { useFetchData } from "../hooks/useFetchData";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Users } from "@/src/utils/types";
 import Badge from "@/src/components/Badge";
+import { debounce } from "@/src/utils/functions";
+import { admin } from "@/src/utils/route";
+import UserInfo from "./components/UserInfo";
+import { toast } from "sonner";
+import { deleteUser } from "../actions";
+import DeleteUserDialog from "./components/DeleteUserDialog";
+import { approveUser } from "./actions";
 
 export default function UserPage() {
 	const [page, setPage] = useState(1);
 	const [searchQuery, setSearchQuery] = useState("");
 
-	const { data, isLoading } = useFetchData<Users>({
+	const { data, isLoading, pagination, refresh } = useFetchData<Users>({
 		table: "users_complete_profiles",
 		page,
 		limit: 5,
@@ -47,14 +54,61 @@ export default function UserPage() {
 		where: [{ column: "is_deleted", operator: "eq", value: false }],
 	});
 
-	console.log(data);
+	const debouncedSetSearchQuery = useRef(
+		debounce((value: string) => setSearchQuery(value), 500)
+	).current;
+
+	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+		debouncedSetSearchQuery(event.target.value);
+	};
+
+	const handlePageChange = (newPage: number) => {
+		if (newPage >= 1 && newPage <= pagination.lastPage) {
+			setPage(newPage);
+		}
+	};
+
+	const handleDelete = async (userId: string) => {
+		const result = await deleteUser(userId);
+
+		if (result.type === "success") {
+			refresh(); // 🔁 refetch after deleting user
+			toast(`${result.msg}`, {
+				duration: 3000,
+				description: "User deleted successfully.",
+			});
+		} else {
+			toast.error(`${result.msg}`, {
+				duration: 3000,
+				description: "Failed to delete user.",
+			});
+		}
+	};
+
+	const handleApprove = async (userId: string) => {
+		const result = await approveUser(userId);
+
+		if (result.type === "success") {
+			refresh(); // 🔁 refetch after deleting user
+			toast(`${result.msg}`, {
+				duration: 3000,
+				description: "User approved successfully.",
+			});
+		} else {
+			toast.error(`${result.msg}`, {
+				duration: 3000,
+				description: "Failed to approve user.",
+			});
+		}
+	};
+
 	return (
 		<>
 			<h1 className="mb-4">Users</h1>
 			<Breadcrumb className="mb-4">
 				<BreadcrumbList>
 					<BreadcrumbItem>
-						<BreadcrumbLink href="/">Home</BreadcrumbLink>
+						<BreadcrumbLink href={admin.home}>Home</BreadcrumbLink>
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
@@ -66,10 +120,11 @@ export default function UserPage() {
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
-			<Search onChange={() => {}} />
+
+			<Search onChange={handleSearch} />
 
 			<Table>
-				<TableCaption>A list of your recent invoices.</TableCaption>
+				<TableCaption>A list of registered users</TableCaption>
 				<TableHeader>
 					<TableRow>
 						<TableHead>Name</TableHead>
@@ -92,21 +147,29 @@ export default function UserPage() {
 								<TableCell>{user.email}</TableCell>
 								<TableCell>{user.gender}</TableCell>
 								<TableCell>{user.birthdate}</TableCell>
-								{user.role === "verified_user" ? (
-									<TableCell>
-										<Badge>Verified</Badge>
-									</TableCell>
-								) : (
-									<TableCell>
-										<Badge variant="warning">
-											Unverified
-										</Badge>
-									</TableCell>
-								)}
-								<TableCell className="text-center">
-									{/* Add action buttons here */}
-
-									<button className="btn">View</button>
+								<TableCell>
+									<Badge
+										variant={
+											user.role === "unverified_user"
+												? "warning"
+												: "success"
+										}
+									>
+										{user.role === "unverified_user"
+											? "Unverified"
+											: "Verified"}
+									</Badge>
+								</TableCell>
+								<TableCell>
+									<UserInfo
+										user={user}
+										onApprove={handleApprove}
+									/>
+									<DeleteUserDialog
+										onDelete={handleDelete}
+										userId={user.user_id!}
+										email={user.email!}
+									/>
 								</TableCell>
 							</TableRow>
 						))
@@ -117,24 +180,42 @@ export default function UserPage() {
 			<Pagination>
 				<PaginationContent>
 					<PaginationItem>
-						<PaginationPrevious href="#" />
+						<PaginationPrevious
+							onClick={() =>
+								handlePageChange(pagination.page - 1)
+							}
+							aria-disabled={pagination.page === 1}
+							className={
+								pagination.page === 1
+									? "pointer-events-none opacity-50"
+									: ""
+							}
+						/>
 					</PaginationItem>
+					{Array.from({ length: pagination.lastPage }, (_, index) => (
+						<PaginationItem key={index + 1}>
+							<PaginationLink
+								isActive={pagination.page === index + 1}
+								onClick={() => handlePageChange(index + 1)}
+							>
+								{index + 1}
+							</PaginationLink>
+						</PaginationItem>
+					))}
 					<PaginationItem>
-						<PaginationLink href="#">1</PaginationLink>
-					</PaginationItem>
-					<PaginationItem>
-						<PaginationLink href="#" isActive>
-							2
-						</PaginationLink>
-					</PaginationItem>
-					<PaginationItem>
-						<PaginationLink href="#">3</PaginationLink>
-					</PaginationItem>
-					<PaginationItem>
-						<PaginationEllipsis />
-					</PaginationItem>
-					<PaginationItem>
-						<PaginationNext href="#" />
+						<PaginationNext
+							onClick={() =>
+								handlePageChange(pagination.page + 1)
+							}
+							aria-disabled={
+								pagination.page === pagination.lastPage
+							}
+							className={
+								pagination.page === pagination.lastPage
+									? "pointer-events-none opacity-50"
+									: ""
+							}
+						/>
 					</PaginationItem>
 				</PaginationContent>
 			</Pagination>

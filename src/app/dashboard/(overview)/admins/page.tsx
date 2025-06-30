@@ -35,7 +35,7 @@ import { useActionState, useRef, useState } from "react";
 import { ActionStatus, Admins } from "@/src/utils/types";
 import { debounce } from "@/src/utils/functions";
 import AddAdminDialog from "./components/AddAdminDialog";
-import { createAdminUser, deleteAdminUser } from "./actions";
+import { createUser, deleteUser } from "../actions";
 import DeleteAdminDialog from "./components/DeleteAdminDialog";
 import { toast } from "sonner";
 
@@ -61,7 +61,7 @@ export default function AdminSection() {
 	) {
 		if (!formData) return state; // Ensure formData is present
 
-		const res = await createAdminUser(formData);
+		const res = await createUser(formData);
 
 		if (res.type === "success") {
 			refresh(); // 🔁 refetch after adding admin
@@ -111,7 +111,7 @@ export default function AdminSection() {
 	};
 
 	const handleDelete = async (userId: string) => {
-		const result = await deleteAdminUser(userId);
+		const result = await deleteUser(userId);
 
 		if (result.type === "success") {
 			refresh(); // 🔁 refetch after deleting admin

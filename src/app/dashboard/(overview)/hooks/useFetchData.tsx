@@ -10,7 +10,7 @@ interface WhereCondition {
 interface UseFetchDataProps {
 	table: string;
 	page: number;
-	limit: number;
+	limit?: number;
 
 	// Optional search query to filter results
 	searchQuery?: string;
@@ -37,7 +37,7 @@ interface PaginationInfo {
 export function useFetchData<T>({
 	table,
 	page,
-	limit,
+	limit = 5,
 	searchQuery,
 	columns = ["*"], // Default to selecting all columns
 	searchColumn = [],

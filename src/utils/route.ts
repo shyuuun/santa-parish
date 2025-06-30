@@ -15,4 +15,5 @@ export const admin: Route = {
 	home: "/dashboard",
 	users: "/dashboard/users",
 	admins: "/dashboard/admins",
+	announcements: "/dashboard/announcements",
 };

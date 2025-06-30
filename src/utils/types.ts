@@ -34,3 +34,5 @@ export type ActionStatus = {
 	type: string;
 	msg?: string;
 };
+
+export type UserAdditionalInfo = Tables<"user_add_info">;

@@ -1,8 +1,12 @@
 "use server";
 
+/**
+ * This file contains server actions for creating and deleting users in supabase
+ */
+
 import { createClient } from "@supabase/supabase-js";
 
-export async function createAdminUser(formData: FormData) {
+export async function createUser(formData: FormData) {
 	const supabase = createClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
 		process.env.NEXT_PUBLIC_SERVICE_ROLE!
@@ -58,13 +62,13 @@ export async function createAdminUser(formData: FormData) {
 	};
 }
 
-export async function deleteAdminUser(adminId: string) {
+export async function deleteUser(id: string) {
 	const supabase = createClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
 		process.env.NEXT_PUBLIC_SERVICE_ROLE!
 	);
 
-	const { error } = await supabase.auth.admin.deleteUser(adminId, true);
+	const { error } = await supabase.auth.admin.deleteUser(id, true);
 	console.log("Error deleting admn", error);
 	if (error) {
 		return {
@@ -75,6 +79,6 @@ export async function deleteAdminUser(adminId: string) {
 
 	return {
 		type: "success",
-		msg: `User with ID ${adminId} deleted successfully.`,
+		msg: `User with ID ${id} deleted successfully.`,
 	};
 }

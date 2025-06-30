@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -9,13 +10,6 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/src/components/shadcn/breadcrumb";
-
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/src/components/shadcn/dialog";
 
 import {
 	Pagination,
@@ -28,7 +22,6 @@ import {
 
 import { admin } from "@/src/utils/route";
 import { useFetchData } from "../hooks/useFetchData";
-import PostViewer from "@/src/components/PostViewer";
 import AddAnnouncementDialog from "./components/AddAnnouncementDialog";
 
 type Announcement = {
@@ -40,9 +33,8 @@ type Announcement = {
 };
 
 export default function Announcements() {
+	const router = useRouter();
 	const [page, setPage] = useState(1);
-	const [selectedAnnouncement, setSelectedAnnouncement] =
-		useState<Announcement | null>(null);
 
 	const {
 		data: announcements,
@@ -90,7 +82,9 @@ export default function Announcements() {
 							<article
 								key={announcement.id}
 								onClick={() =>
-									setSelectedAnnouncement(announcement)
+									router.push(
+										`/announcements/${announcement.id}`
+									)
 								}
 								className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
 							>
@@ -179,22 +173,6 @@ export default function Announcements() {
 							</PaginationItem>
 						</PaginationContent>
 					</Pagination>
-
-					<Dialog
-						open={!!selectedAnnouncement}
-						onOpenChange={() => setSelectedAnnouncement(null)}
-					>
-						<DialogContent className="max-w-4xl">
-							<DialogHeader>
-								<DialogTitle>
-									{selectedAnnouncement?.title}
-								</DialogTitle>
-							</DialogHeader>
-							{selectedAnnouncement && (
-								<PostViewer post={selectedAnnouncement} />
-							)}
-						</DialogContent>
-					</Dialog>
 				</>
 			)}
 		</>

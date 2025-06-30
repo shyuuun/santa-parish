@@ -1,12 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/src/components/shadcn/dialog";
+import { useRouter } from "next/navigation";
 import {
 	Pagination,
 	PaginationContent,
@@ -16,7 +11,6 @@ import {
 	PaginationPrevious,
 } from "@/src/components/shadcn/pagination";
 import { createClient } from "@/src/utils/supabase/cilent";
-import PostViewer from "./PostViewer";
 
 type Announcement = {
 	id: number;
@@ -35,10 +29,9 @@ export default function AnnouncementsSection({
 	initialAnnouncements,
 	totalCount,
 }: AnnouncementsSectionProps) {
+	const router = useRouter();
 	const [announcements, setAnnouncements] = useState(initialAnnouncements);
 	const [page, setPage] = useState(1);
-	const [selectedAnnouncement, setSelectedAnnouncement] =
-		useState<Announcement | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const itemsPerPage = 3;
@@ -82,7 +75,9 @@ export default function AnnouncementsSection({
 							<article
 								key={announcement.id}
 								onClick={() =>
-									setSelectedAnnouncement(announcement)
+									router.push(
+										`/announcements/${announcement.id}`
+									)
 								}
 								className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
 							>
@@ -171,20 +166,6 @@ export default function AnnouncementsSection({
 					)}
 				</>
 			)}
-
-			<Dialog
-				open={!!selectedAnnouncement}
-				onOpenChange={() => setSelectedAnnouncement(null)}
-			>
-				<DialogContent className="max-w-4xl">
-					<DialogHeader>
-						<DialogTitle>{selectedAnnouncement?.title}</DialogTitle>
-					</DialogHeader>
-					{selectedAnnouncement && (
-						<PostViewer post={selectedAnnouncement} />
-					)}
-				</DialogContent>
-			</Dialog>
 		</>
 	);
 }

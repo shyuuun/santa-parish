@@ -32,11 +32,12 @@ import { Dialog, DialogTrigger } from "@/src/components/shadcn/dialog";
 import Search from "./components/Search";
 import { useFetchData } from "../hooks/useFetchData";
 import { useActionState, useRef, useState } from "react";
-import { ActionStatus, Admins, USER_ROLES } from "@/src/utils/types";
+import { ActionStatus, Admins } from "@/src/utils/types";
 import { debounce } from "@/src/utils/functions";
 import AddAdminDialog from "./components/AddAdminDialog";
 import { createAdminUser, deleteAdminUser } from "./actions";
 import DeleteAdminDialog from "./components/DeleteAdminDialog";
+import { toast } from "sonner";
 
 export default function AdminSection() {
 	const [page, setPage] = useState(1);
@@ -64,6 +65,15 @@ export default function AdminSection() {
 
 		if (res.type === "success") {
 			refresh(); // 🔁 refetch after adding admin
+			toast(`${res.msg}`, {
+				duration: 3000,
+				description: "Admin user created successfully.",
+			});
+		} else {
+			toast.error(`${res.msg}`, {
+				duration: 3000,
+				description: "Failed to create admin user.",
+			});
 		}
 		return res;
 	}
@@ -105,6 +115,15 @@ export default function AdminSection() {
 
 		if (result.type === "success") {
 			refresh(); // 🔁 refetch after deleting admin
+			toast(`${result.msg}`, {
+				duration: 3000,
+				description: "Admin user deleted successfully.",
+			});
+		} else {
+			toast.error(`${result.msg}`, {
+				duration: 3000,
+				description: "Failed to delete admin user.",
+			});
 		}
 	};
 	return (

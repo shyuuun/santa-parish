@@ -61,34 +61,38 @@ export type Database = {
             referencedRelation: "user_with_roles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "user_add_info_uuid_fkey"
+            columns: ["uuid"]
+            isOneToOne: true
+            referencedRelation: "users_complete_profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       user_info: {
         Row: {
           address: string
           birthdate: string
-          created_time: string
           gender: Database["public"]["Enums"]["gender"]
           name: string
-          updated_time: string
+          updated_by: string | null
           uuid: string
         }
         Insert: {
           address?: string
           birthdate: string
-          created_time?: string
           gender: Database["public"]["Enums"]["gender"]
           name?: string
-          updated_time?: string
+          updated_by?: string | null
           uuid?: string
         }
         Update: {
           address?: string
           birthdate?: string
-          created_time?: string
           gender?: Database["public"]["Enums"]["gender"]
           name?: string
-          updated_time?: string
+          updated_by?: string | null
           uuid?: string
         }
         Relationships: [
@@ -104,6 +108,13 @@ export type Database = {
             columns: ["uuid"]
             isOneToOne: true
             referencedRelation: "user_with_roles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_info_uuid_fkey"
+            columns: ["uuid"]
+            isOneToOne: true
+            referencedRelation: "users_complete_profiles"
             referencedColumns: ["user_id"]
           },
         ]
@@ -143,6 +154,13 @@ export type Database = {
             referencedRelation: "user_with_roles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users_complete_profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
     }
@@ -160,7 +178,23 @@ export type Database = {
         Row: {
           created_at: string | null
           email: string | null
+          is_deleted: boolean | null
           role: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
+      users_complete_profiles: {
+        Row: {
+          address: string | null
+          birthdate: string | null
+          created_at: string | null
+          email: string | null
+          gender: Database["public"]["Enums"]["gender"] | null
+          is_deleted: boolean | null
+          name: string | null
+          role: string | null
+          updated_by: string | null
           user_id: string | null
         }
         Relationships: []

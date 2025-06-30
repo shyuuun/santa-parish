@@ -28,6 +28,7 @@ export const USER_ROLES = Object.freeze({
 // export type UserWithRoles = Tables<"user_with_roles">;
 
 export type Admins = Tables<"admins">;
+export type Users = Tables<"users_complete_profiles">;
 
 export type ActionStatus = {
 	type: string;

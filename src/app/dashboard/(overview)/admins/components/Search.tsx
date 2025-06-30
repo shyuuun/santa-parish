@@ -1,3 +1,4 @@
+"use client";
 import { Input } from "@/src/components/shadcn/input";
 
 export default function Search({

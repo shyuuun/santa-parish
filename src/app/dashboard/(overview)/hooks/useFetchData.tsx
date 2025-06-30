@@ -64,7 +64,7 @@ export function useFetchData<T>({
 		columnResult = "*"; // Default to selecting all columns
 	}
 
-	console.log("useAdmin Hook: Columns", columnResult);
+	console.log("useFetch Hook: Columns", columnResult);
 
 	useEffect(() => {
 		(async () => {

@@ -12,7 +12,7 @@ export const auth: Route = {
 export const user: Route = {};
 
 export const admin: Route = {
-	dashboard: "/d"
+	home: "/dashboard",
+	users: "/dashboard/users",
+	admins: "/dashboard/admins",
 };
-
-

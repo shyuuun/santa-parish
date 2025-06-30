@@ -1,18 +1,19 @@
 "use client";
 
 import { useActionState } from "react";
-import { AuthStatus, register } from "../actions";
+import { register } from "../actions";
 import { Input } from "@/src/components/shadcn/input";
 import { Label } from "@/src/components/shadcn/label";
 import Loader from "@/src/components/Loader";
 import Link from "next/link";
 import Alert from "@/src/components/Alert";
 import Button from "@/src/components/Button";
+import { ActionStatus } from "@/src/utils/types";
 
 export default function RegisterForm() {
 	// TODO: Make it simple
-	const [formState, formAction, pending] = useActionState<AuthStatus>(
-		async (state: AuthStatus, formData?: FormData) => {
+	const [formState, formAction, pending] = useActionState<ActionStatus>(
+		async (state: ActionStatus, formData?: FormData) => {
 			if (!formData) return state; // Ensure formData is present
 
 			const response = await register(formData); // Call login with formData

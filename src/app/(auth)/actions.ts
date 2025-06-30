@@ -5,11 +5,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/src/utils/supabase/server";
 import { getUserRole } from "@/src/utils/supabaseUtils";
 
-export type AuthStatus = {
-	type: string;
-	msg?: string;
-};
-
 export async function login(formData: FormData) {
 	const supabase = await createClient();
 

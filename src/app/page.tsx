@@ -9,6 +9,12 @@ import {
 	PersonStanding,
 	Shield,
 } from "lucide-react";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/src/components/shadcn/accordion";
 
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
@@ -120,6 +126,77 @@ export default async function Home() {
 							icon={<HandHeart />}
 						/>
 					</article>
+				</section>
+				<section className="max-w-3/4 mx-auto mb-16">
+					<h3 className="text-center text-2xl font-bold mb-8 font-serif text-sky-500">
+						Frequently Asked Questions
+					</h3>
+					<Accordion type="single" collapsible className="w-full">
+						<AccordionItem value="item-1">
+							<AccordionTrigger>
+								How do I become a member of the cooperative?
+							</AccordionTrigger>
+							<AccordionContent>
+								To become a member, you need to: 1) Complete our
+								online registration form, 2) Submit required
+								documents for verification, 3) Pay the
+								membership fee and initial share capital, and 4)
+								Wait for admin approval. Once approved, you'll
+								have full access to our services.
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-2">
+							<AccordionTrigger>
+								What types of loans do you offer?
+							</AccordionTrigger>
+							<AccordionContent>
+								We offer various loan types including: Personal
+								Loans, Business Loans, Emergency Loans, and
+								Microfinance Loans. Each loan type has different
+								terms, interest rates, and requirements. Members
+								must be in good standing to qualify for loans.
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-3">
+							<AccordionTrigger>
+								What are the benefits of being a member?
+							</AccordionTrigger>
+							<AccordionContent>
+								Members enjoy: Access to low-interest loans,
+								competitive savings rates, dividend shares from
+								cooperative profits, free financial literacy
+								training, insurance coverage options, and
+								participation in community development programs.
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-4">
+							<AccordionTrigger>
+								How long does the loan approval process take?
+							</AccordionTrigger>
+							<AccordionContent>
+								Typically, loan applications are processed
+								within 1-2 business days. However, the actual
+								approval time may vary depending on the loan
+								type, amount, and completeness of submitted
+								requirements. Emergency loans may be processed
+								more quickly.
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-5">
+							<AccordionTrigger>
+								How can I check my account balance and
+								transaction history?
+							</AccordionTrigger>
+							<AccordionContent>
+								Members can access their account information
+								through our online portal. Simply log in to your
+								account to view your balance, transaction
+								history, loan status, and other important
+								account details. You can also visit our office
+								for in-person assistance.
+							</AccordionContent>
+						</AccordionItem>
+					</Accordion>
 				</section>
 				<section className="max-w-3/4 mx-auto p-12 " id="announce">
 					<h1 className="text-center text-2xl md:text-5xl  font-serif">

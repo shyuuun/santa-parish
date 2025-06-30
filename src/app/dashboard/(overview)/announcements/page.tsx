@@ -1,3 +1,4 @@
+"use client";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -6,7 +7,11 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/src/components/shadcn/breadcrumb";
+
 import { admin } from "@/src/utils/route";
+
+import Editor from "react-simple-wysiwyg";
+import AddAnnouncementDialog from "./components/AddAnnouncementDialog";
 
 export default function Announcements() {
 	return (
@@ -26,6 +31,9 @@ export default function Announcements() {
 				</BreadcrumbList>
 			</Breadcrumb>
 
+			<div className="flex justify-end mb-4">
+				<AddAnnouncementDialog />
+			</div>
 			
 		</>
 	);

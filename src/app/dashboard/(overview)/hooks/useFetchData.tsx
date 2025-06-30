@@ -1,6 +1,12 @@
 import { createClient } from "@/src/utils/supabase/cilent";
 import { useEffect, useState } from "react";
 
+interface WhereCondition {
+	column: string;
+	operator: "eq" | "neq";
+	value: string | number | boolean;
+}
+
 interface UseFetchDataProps {
 	table: string;
 	page: number;
@@ -13,6 +19,7 @@ interface UseFetchDataProps {
 	columns?: string[];
 	// Optional column to search against
 	searchColumn?: string[];
+	where?: WhereCondition[];
 }
 
 interface PaginationInfo {
@@ -34,6 +41,7 @@ export function useFetchData<T>({
 	searchQuery,
 	columns = ["*"], // Default to selecting all columns
 	searchColumn = [],
+	where = [],
 }: UseFetchDataProps) {
 	const [data, setData] = useState<T[] | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -71,6 +79,30 @@ export function useFetchData<T>({
 				let query = supabase
 					.from(table)
 					.select(columnResult, { count: "exact" });
+
+				// Apply where conditions if provided
+				if (where && where.length > 0) {
+					where.forEach((condition) => {
+						switch (condition.operator) {
+							case "eq":
+								query = query.eq(
+									condition.column,
+									condition.value
+								);
+								break;
+							case "neq":
+								query = query.neq(
+									condition.column,
+									condition.value
+								);
+								break;
+							default:
+								throw new Error(
+									`Unsupported operator: ${condition.operator}`
+								);
+						}
+					});
+				}
 
 				// Add search condition if searchQuery exists
 				if (searchQuery) {

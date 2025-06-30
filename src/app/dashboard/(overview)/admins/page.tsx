@@ -27,34 +27,31 @@ import {
 	PaginationPrevious,
 } from "@/src/components/shadcn/pagination";
 
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/src/components/shadcn/dialog";
+import { Dialog, DialogTrigger } from "@/src/components/shadcn/dialog";
 
 import Search from "./components/Search";
 import { useFetchData } from "../hooks/useFetchData";
 import { useActionState, useRef, useState } from "react";
-import { ActionStatus, Admins } from "@/src/utils/types";
+import { ActionStatus, Admins, USER_ROLES } from "@/src/utils/types";
 import { debounce } from "@/src/utils/functions";
-import Button from "@/src/components/Button";
 import AddAdminDialog from "./components/AddAdminDialog";
-import { createAdminUser } from "./actions";
+import { createAdminUser, deleteAdminUser } from "./actions";
+import DeleteAdminDialog from "./components/DeleteAdminDialog";
 
 export default function AdminSection() {
 	const [page, setPage] = useState(1);
 	const [searchQuery, setSearchQuery] = useState("");
 
 	const { data, pagination, isLoading, refresh } = useFetchData<Admins>({
-		table: "admins",
+		table: "user_with_roles",
 		page,
 		limit: 5,
 		searchQuery: searchQuery,
 		searchColumn: ["email"],
+		where: [
+			{ column: "role", operator: "eq", value: "admin" },
+			{ column: "is_deleted", operator: "eq", value: false },
+		],
 	});
 
 	async function action<ActionStatus>(
@@ -103,6 +100,13 @@ export default function AdminSection() {
 		}
 	};
 
+	const handleDelete = async (userId: string) => {
+		const result = await deleteAdminUser(userId);
+
+		if (result.type === "success") {
+			refresh(); // 🔁 refetch after deleting admin
+		}
+	};
 	return (
 		<>
 			<h1 className="mb-4">Admin</h1>
@@ -127,15 +131,8 @@ export default function AdminSection() {
 			<div className="flex justify-end mb-4">
 				<Dialog>
 					<DialogTrigger className="btn">Add Admin</DialogTrigger>
-					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>Add Admin</DialogTitle>
-							<DialogDescription>
-								Enter the details for the new admin.
-							</DialogDescription>
-						</DialogHeader>
-						<AddAdminDialog formAction={formAction} />
-					</DialogContent>
+
+					<AddAdminDialog formAction={formAction} />
 				</Dialog>
 			</div>
 
@@ -171,7 +168,17 @@ export default function AdminSection() {
 										: "N/A"}
 								</TableCell>
 								<TableCell>
-									<Button>Delete</Button>
+									{/* Delete dialog */}
+									<Dialog>
+										<DialogTrigger className="btn">
+											Delete
+										</DialogTrigger>
+										<DeleteAdminDialog
+											onDelete={handleDelete}
+											adminEmail={admin.email!}
+											userId={admin.user_id!}
+										/>
+									</Dialog>
 								</TableCell>
 							</TableRow>
 						))

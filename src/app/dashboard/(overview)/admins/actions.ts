@@ -57,3 +57,24 @@ export async function createAdminUser(formData: FormData) {
 		msg: `User ${data.user?.email} created successfully.`,
 	};
 }
+
+export async function deleteAdminUser(adminId: string) {
+	const supabase = createClient(
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.NEXT_PUBLIC_SERVICE_ROLE!
+	);
+
+	const { error } = await supabase.auth.admin.deleteUser(adminId, true);
+	console.log("Error deleting admn", error);
+	if (error) {
+		return {
+			type: "failed",
+			msg: `Error deleting user: ${error.message}`,
+		};
+	}
+
+	return {
+		type: "success",
+		msg: `User with ID ${adminId} deleted successfully.`,
+	};
+}

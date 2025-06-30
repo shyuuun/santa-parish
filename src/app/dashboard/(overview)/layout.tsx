@@ -1,5 +1,4 @@
 // TODO : Make the CSS more readable
-"use client";
 import Sidebar from "./components/Sidebar";
 import { RouteLink } from "@/src/utils/types";
 

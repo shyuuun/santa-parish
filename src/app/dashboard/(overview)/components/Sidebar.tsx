@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import logo from "@/public/logo.svg";
 import Image from "next/image";

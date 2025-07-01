@@ -13,7 +13,7 @@ export const user: Route = {
 	home: "/home",
 	loan: "/home/loans",
 	profile: "/home/profile",
-	transaction: "/home/transaction"
+	transaction: "/home/transaction",
 };
 
 export const admin: Route = {
@@ -21,4 +21,5 @@ export const admin: Route = {
 	users: "/dashboard/users",
 	admins: "/dashboard/admins",
 	announcements: "/dashboard/announcements",
+	loans: "/dashboard/loans",
 };

@@ -19,6 +19,115 @@ import {
 	Settings,
 } from "lucide-react";
 
+async function getUserActiveLoans(userId: string) {
+	const supabase = await createClient();
+
+	const { data: loans, error } = await supabase
+		.from("loan_details")
+		.select(
+			`
+			*,
+			loan_applications (
+				loan_type,
+				purpose_loan
+			)
+		`
+		)
+		.eq("applicant_id", userId)
+		.eq("loan_status", "active")
+		.order("created_at", { ascending: false })
+		.limit(1);
+
+	if (error) {
+		console.error("Error fetching active loans:", error);
+		return null;
+	}
+
+	return loans?.[0] || null;
+}
+
+async function getUserRecentTransactions(userId: string) {
+	const supabase = await createClient();
+
+	// Get recent payments
+	const { data: payments, error: paymentsError } = await supabase
+		.from("payments")
+		.select(
+			`
+			*,
+			loan_details!inner (
+				applicant_id,
+				loan_applications (
+					loan_type
+				)
+			)
+		`
+		)
+		.eq("loan_details.applicant_id", userId)
+		.order("payment_date", { ascending: false })
+		.limit(3);
+
+	// Get recent loan disbursements
+	const { data: loans, error: loansError } = await supabase
+		.from("loan_details")
+		.select(
+			`
+			*,
+			loan_applications (
+				loan_type
+			)
+		`
+		)
+		.eq("applicant_id", userId)
+		.order("created_at", { ascending: false })
+		.limit(2);
+
+	interface Transaction {
+		id: string;
+		type: string;
+		amount: number;
+		date: string;
+		description: string;
+	}
+
+	const transactions: Transaction[] = [];
+
+	// Add payments as transactions
+	if (!paymentsError && payments) {
+		payments.forEach((payment) => {
+			transactions.push({
+				id: `payment-${payment.id}`,
+				type: "Payment",
+				amount: -payment.payment_amount,
+				date: payment.payment_date || payment.created_at || "",
+				description: `Loan Payment - ${
+					payment.loan_details?.loan_applications?.loan_type || "Loan"
+				}`,
+			});
+		});
+	}
+
+	// Add disbursements as transactions
+	if (!loansError && loans) {
+		loans.forEach((loan) => {
+			transactions.push({
+				id: `disbursement-${loan.id}`,
+				type: "Disbursement",
+				amount: loan.principal_amount,
+				date: loan.created_at || "",
+				description: `Loan Disbursement - ${
+					loan.loan_applications?.loan_type || "Loan"
+				}`,
+			});
+		});
+	}
+
+	// Sort by date and return top 3
+	return transactions
+		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+		.slice(0, 3);
+}
+
 export default async function HomePage() {
 	const supabase = await createClient();
 
@@ -37,9 +146,9 @@ export default async function HomePage() {
 		.eq("uuid", user.id)
 		.single();
 
-	// Mock data for demonstration - replace with actual data from your database
-	const activeLoanAmount = 5000.0;
-	const nextPaymentDate = "2025-01-15";
+	// Get real data
+	const activeLoan = await getUserActiveLoans(user.id);
+	const recentTransactions = await getUserRecentTransactions(user.id);
 
 	const quickActions = [
 		{
@@ -50,7 +159,7 @@ export default async function HomePage() {
 		},
 		{
 			title: "View Transactions",
-			href: "/home/transactions",
+			href: "/home/transaction",
 			icon: FileText,
 			color: "bg-blue-500",
 		},
@@ -59,30 +168,6 @@ export default async function HomePage() {
 			href: "/home/loans",
 			icon: Calendar,
 			color: "bg-red-600",
-		},
-	];
-
-	const recentTransactions = [
-		{
-			id: 1,
-			type: "Deposit",
-			amount: 500,
-			date: "2025-01-02",
-			description: "Salary Deposit",
-		},
-		{
-			id: 2,
-			type: "Withdrawal",
-			amount: -150,
-			date: "2025-01-01",
-			description: "ATM Withdrawal",
-		},
-		{
-			id: 3,
-			type: "Transfer",
-			amount: -200,
-			date: "2024-12-28",
-			description: "Bill Payment",
 		},
 	];
 
@@ -117,12 +202,45 @@ export default async function HomePage() {
 						<CreditCard className="h-4 w-4 text-muted-foreground" />
 					</CardHeader>
 					<CardContent>
-						<div className="text-2xl font-bold">
-							₱{activeLoanAmount.toLocaleString()}
-						</div>
-						<p className="text-xs text-muted-foreground">
-							Next payment: {nextPaymentDate}
-						</p>
+						{activeLoan ? (
+							<>
+								<div className="text-2xl font-bold">
+									₱
+									{activeLoan.remaining_balance?.toLocaleString()}
+								</div>
+								<p className="text-xs text-muted-foreground">
+									Remaining balance • Next payment:{" "}
+									{activeLoan.next_payment_date
+										? new Date(
+												activeLoan.next_payment_date
+										  ).toLocaleDateString()
+										: "TBD"}
+								</p>
+								<div className="mt-2">
+									<Link href="/home/loans">
+										<Button size="sm" variant="outline">
+											View Details
+										</Button>
+									</Link>
+								</div>
+							</>
+						) : (
+							<>
+								<div className="text-2xl font-bold text-gray-400">
+									₱0
+								</div>
+								<p className="text-xs text-muted-foreground">
+									No active loans
+								</p>
+								<div className="mt-2">
+									<Link href="/home/loans/apply">
+										<Button size="sm" variant="outline">
+											Apply for Loan
+										</Button>
+									</Link>
+								</div>
+							</>
+						)}
 					</CardContent>
 				</Card>
 			</div>
@@ -161,66 +279,87 @@ export default async function HomePage() {
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between">
 						<CardTitle>Recent Transactions</CardTitle>
-						<Link href="/home/transactions">
+						<Link href="/home/transaction">
 							<Button variant="outline" size="sm">
 								View All
 							</Button>
 						</Link>
 					</CardHeader>
 					<CardContent>
-						<div className="space-y-4">
-							{recentTransactions.map((transaction) => (
-								<div
-									key={transaction.id}
-									className="flex items-center justify-between"
-								>
-									<div className="flex items-center space-x-3">
+						{recentTransactions.length > 0 ? (
+							<div className="space-y-4">
+								{recentTransactions.map((transaction) => (
+									<div
+										key={transaction.id}
+										className="flex items-center justify-between"
+									>
+										<div className="flex items-center space-x-3">
+											<div
+												className={`p-2 rounded-full ${
+													transaction.type ===
+													"Disbursement"
+														? "bg-green-100"
+														: transaction.type ===
+														  "Payment"
+														? "bg-red-100"
+														: "bg-blue-100"
+												}`}
+											>
+												<DollarSign
+													className={`h-4 w-4 ${
+														transaction.type ===
+														"Disbursement"
+															? "text-green-600"
+															: transaction.type ===
+															  "Payment"
+															? "text-red-600"
+															: "text-blue-600"
+													}`}
+												/>
+											</div>
+											<div>
+												<p className="text-sm font-medium">
+													{transaction.description}
+												</p>
+												<p className="text-xs text-muted-foreground">
+													{transaction.date
+														? new Date(
+																transaction.date
+														  ).toLocaleDateString()
+														: "N/A"}
+												</p>
+											</div>
+										</div>
 										<div
-											className={`p-2 rounded-full ${
-												transaction.type === "Deposit"
-													? "bg-green-100"
-													: transaction.type ===
-													  "Withdrawal"
-													? "bg-red-100"
-													: "bg-blue-100"
+											className={`text-sm font-medium ${
+												transaction.amount > 0
+													? "text-green-600"
+													: "text-red-600"
 											}`}
 										>
-											<DollarSign
-												className={`h-4 w-4 ${
-													transaction.type ===
-													"Deposit"
-														? "text-green-600"
-														: transaction.type ===
-														  "Withdrawal"
-														? "text-red-600"
-														: "text-blue-600"
-												}`}
-											/>
-										</div>
-										<div>
-											<p className="text-sm font-medium">
-												{transaction.description}
-											</p>
-											<p className="text-xs text-muted-foreground">
-												{transaction.date}
-											</p>
+											{transaction.amount > 0 ? "+" : ""}₱
+											{Math.abs(
+												transaction.amount
+											).toLocaleString()}
 										</div>
 									</div>
-									<div
-										className={`text-sm font-medium ${
-											transaction.amount > 0
-												? "text-green-600"
-												: "text-red-600"
-										}`}
-									>
-										{transaction.amount > 0 ? "+" : ""}₱
-										{Math.abs(
-											transaction.amount
-										).toLocaleString()}
-									</div>
-								</div>
-							))}
-						</div>
+								))}
+							</div>
+						) : (
+							<div className="text-center py-4">
+								<p className="text-sm text-muted-foreground">
+									No recent transactions
+								</p>
+								<Link
+									href="/home/loans/apply"
+									className="inline-block mt-2"
+								>
+									<Button size="sm" variant="outline">
+										Apply for Loan
+									</Button>
+								</Link>
+							</div>
+						)}
 					</CardContent>
 				</Card>
 			</div>

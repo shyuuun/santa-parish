@@ -424,22 +424,13 @@ export default function EditProfilePage() {
 									required
 								/>
 							</div>
-
-							<div className="p-4 bg-blue-50 rounded-lg">
-								<p className="text-sm text-blue-700">
-									<strong>Note:</strong> Changes to employment
-									information may require admin verification.
-									Your account status may be updated
-									accordingly.
-								</p>
-							</div>
 						</CardContent>
 					</Card>
 				</div>
 
 				{/* Action Buttons */}
 				<Card>
-					<CardContent className="pt-6">
+					<CardContent>
 						<div className="flex flex-col sm:flex-row gap-4 justify-end">
 							<Link href="/home/profile">
 								<Button

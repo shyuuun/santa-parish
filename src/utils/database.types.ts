@@ -36,6 +36,197 @@ export type Database = {
         }
         Relationships: []
       }
+      loan_applications: {
+        Row: {
+          amount_requested: number
+          app_id: number
+          app_status: string | null
+          applicant_id: string | null
+          approved_amount: number | null
+          created_at: string | null
+          interest_rate: number | null
+          loan_term_months: number | null
+          loan_type: string
+          monthly_payment: number | null
+          purpose_loan: string
+        }
+        Insert: {
+          amount_requested: number
+          app_id?: number
+          app_status?: string | null
+          applicant_id?: string | null
+          approved_amount?: number | null
+          created_at?: string | null
+          interest_rate?: number | null
+          loan_term_months?: number | null
+          loan_type: string
+          monthly_payment?: number | null
+          purpose_loan: string
+        }
+        Update: {
+          amount_requested?: number
+          app_id?: number
+          app_status?: string | null
+          applicant_id?: string | null
+          approved_amount?: number | null
+          created_at?: string | null
+          interest_rate?: number | null
+          loan_term_months?: number | null
+          loan_type?: string
+          monthly_payment?: number | null
+          purpose_loan?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_applications_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "loan_applications_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "user_with_roles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "loan_applications_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "users_complete_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      loan_details: {
+        Row: {
+          applicant_id: string | null
+          created_at: string | null
+          id: number
+          loan_application_id: number | null
+          loan_status: string | null
+          monthly_payment: number
+          next_payment_date: string | null
+          principal_amount: number
+          remaining_balance: number
+        }
+        Insert: {
+          applicant_id?: string | null
+          created_at?: string | null
+          id?: number
+          loan_application_id?: number | null
+          loan_status?: string | null
+          monthly_payment: number
+          next_payment_date?: string | null
+          principal_amount: number
+          remaining_balance: number
+        }
+        Update: {
+          applicant_id?: string | null
+          created_at?: string | null
+          id?: number
+          loan_application_id?: number | null
+          loan_status?: string | null
+          monthly_payment?: number
+          next_payment_date?: string | null
+          principal_amount?: number
+          remaining_balance?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_details_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "loan_details_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "user_with_roles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "loan_details_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "users_complete_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "loan_details_loan_application_id_fkey"
+            columns: ["loan_application_id"]
+            isOneToOne: false
+            referencedRelation: "loan_applications"
+            referencedColumns: ["app_id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          created_at: string | null
+          id: number
+          loan_id: number | null
+          notes: string | null
+          payment_amount: number
+          payment_date: string | null
+          payment_method: string
+          recorded_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          loan_id?: number | null
+          notes?: string | null
+          payment_amount: number
+          payment_date?: string | null
+          payment_method?: string
+          recorded_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          loan_id?: number | null
+          notes?: string | null
+          payment_amount?: number
+          payment_date?: string | null
+          payment_method?: string
+          recorded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_loan_id_fkey"
+            columns: ["loan_id"]
+            isOneToOne: false
+            referencedRelation: "loan_details"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payments_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "user_with_roles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payments_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "users_complete_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       roles: {
         Row: {
           id: number

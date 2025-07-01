@@ -3,9 +3,11 @@ import { redirect } from "next/navigation";
 
 export async function POST(
 	request: Request,
-	{ params }: { params: { id: string } }
+	{ params }: { params: Promise<{ id: string }> }
 ) {
-	const applicationId = parseInt(params.id);
+	// Await the params
+	const { id } = await params;
+	const applicationId = parseInt(id);
 
 	if (isNaN(applicationId)) {
 		redirect("/home/loans?error=Invalid application ID");

@@ -9,7 +9,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 export async function getUserRole(
 	supabase: SupabaseClient | Promise<SupabaseClient>,
 	uuid: string
-) {
+): Promise<number | null> {
 	let sbase;
 
 	if (supabase instanceof SupabaseClient) {
@@ -23,6 +23,8 @@ export async function getUserRole(
 		.select("role_id")
 		.eq("user_id", uuid)
 		.single();
+
+	console.log("Fetching user role for UUID:", data?.role_id);
 
 	if (error) {
 		console.error("Error fetching user info:", error);

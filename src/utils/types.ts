@@ -14,9 +14,9 @@ export interface RouteLink {
 }
 
 export const USER_ROLES = Object.freeze({
-	1: "ADMIN",
-	2: "UNVERIFIED",
-	3: "MEMBER",
+	1: "admin",
+	2: "unverified",
+	3: "verified",
 });
 
 // Type for user with roles view

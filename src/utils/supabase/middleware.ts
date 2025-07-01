@@ -50,6 +50,7 @@ export async function updateSession(request: NextRequest) {
 		path.startsWith("/login") ||
 		path.startsWith("/register") ||
 		path.startsWith("/_next") ||
+		path.startsWith("/announcements") ||
 		path.startsWith("/public");
 
 	console.log("User in middleware:", user?.id);

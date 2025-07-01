@@ -56,6 +56,14 @@ export default async function Home() {
 							&quot;Affordable loans, secure savings, and
 							livelihood programs for a brighter tomorrow&quot;
 						</p>
+						<div className="flex justify-center mt-8">
+							<a
+								href="#about-us"
+								className="border-2 border-red-100 text-red-100 bg-transparent hover:border-red-500 hover:bg-red-500 hover:text-white font-semibold px-8 py-3 rounded shadow transition-colors duration-200 text-lg"
+							>
+								Learn More &amp; Join Us
+							</a>
+						</div>
 					</section>
 				</div>
 				<section
@@ -147,8 +155,8 @@ export default async function Home() {
 								online registration form, 2) Submit required
 								documents for verification, 3) Pay the
 								membership fee and initial share capital, and 4)
-								Wait for admin approval. Once approved, you'll
-								have full access to our services.
+								Wait for admin approval. Once approved,
+								you&apos;ll have full access to our services.
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="item-2">

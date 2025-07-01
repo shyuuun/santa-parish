@@ -9,7 +9,12 @@ export const auth: Route = {
 	forgetPassword: "/forget-password",
 };
 
-export const user: Route = {};
+export const user: Route = {
+	home: "/home",
+	loan: "/home/loans",
+	profile: "/home/profile",
+	transaction: "/home/transaction"
+};
 
 export const admin: Route = {
 	home: "/dashboard",

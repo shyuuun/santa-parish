@@ -86,8 +86,14 @@ export default function Navbar() {
 		router.push("/");
 	};
 
-	const isAdmin = userRole === 1; // Assuming admin role ID is 1
-	const isVerifiedUser = userRole === 2; // Assuming user role ID is 2
+	const isAdmin = userRole === 1; // Admin role ID is 1
+	const isVerifiedUser = userRole === 3; // Verified user role ID is 3
+
+	// Debug logging to help identify the issue
+	console.log("Current user:", currentUser?.email);
+	console.log("User role:", userRole);
+	console.log("Is admin:", isAdmin);
+	console.log("Is verified user:", isVerifiedUser);
 
 	return (
 		<nav

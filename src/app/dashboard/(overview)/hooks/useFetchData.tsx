@@ -147,7 +147,16 @@ export function useFetchData<T>({
 				setIsLoading(false);
 			}
 		})();
-	}, [limit, page, searchQuery, refreshToken]);
+	}, [
+		limit,
+		page,
+		searchQuery,
+		refreshToken,
+		table,
+		columnResult,
+		where,
+		searchColumn,
+	]);
 
 	return {
 		data,

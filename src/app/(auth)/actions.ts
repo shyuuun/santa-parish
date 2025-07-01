@@ -55,7 +55,7 @@ export async function login(formData: FormData): Promise<ActionStatus | void> {
 			};
 		case "3":
 			console.log("Verified");
-			redirect("/account");
+			redirect("/home");
 		default:
 			redirect("/login");
 	}

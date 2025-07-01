@@ -3,13 +3,13 @@ import "./globals.css";
 
 import { Arvo, Inter } from "next/font/google";
 
-export const inter = Inter({
+const inter = Inter({
 	subsets: ["latin"],
 	variable: "--font-inter",
 	display: "swap",
 });
 
-export const arvo = Arvo({
+const arvo = Arvo({
 	subsets: ["latin"],
 	variable: "--font-arvo",
 	weight: "700",

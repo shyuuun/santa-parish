@@ -13,11 +13,14 @@ import { ActionStatus } from "@/src/utils/types";
 export default function LoginForm() {
 	// TODO: Make it simple
 	const [formState, formAction, pending] = useActionState<ActionStatus>(
-		async (state: ActionStatus, formData?: FormData) => {
+		async (
+			state: ActionStatus,
+			formData?: FormData
+		): Promise<ActionStatus> => {
 			if (!formData) return state; // Ensure formData is present
 
 			const response = await login(formData); // Call login with formData
-			return response;
+			return response || state; // Ensure we always return ActionStatus
 		},
 		{ type: "", msg: "" } // Initial state
 	);

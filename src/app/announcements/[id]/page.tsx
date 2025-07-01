@@ -4,14 +4,17 @@ import Image from "next/image";
 import PostViewer from "@/src/components/PostViewer";
 
 interface AnnouncementPageProps {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 
 export default async function AnnouncementPage({
 	params,
 }: AnnouncementPageProps) {
+	// Await the params
+	const { id } = await params;
+
 	// Create Supabase client
 	const supabase = await createClient();
 
@@ -19,7 +22,7 @@ export default async function AnnouncementPage({
 	const { data: announcement } = await supabase
 		.from("announcements")
 		.select("*")
-		.eq("id", params.id)
+		.eq("id", id)
 		.single();
 
 	if (!announcement) {

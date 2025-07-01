@@ -47,11 +47,14 @@ async function getLoanDetails(loanId: string) {
 export default async function LoanDetailsPage({
 	params,
 }: {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }) {
-	const { loan, error: loanError } = await getLoanDetails(params.id);
+	// Await the params
+	const { id } = await params;
+
+	const { loan, error: loanError } = await getLoanDetails(id);
 	const { payments, error: paymentsError } = await getUserLoanPayments(
-		parseInt(params.id)
+		parseInt(id)
 	);
 
 	if (loanError) {

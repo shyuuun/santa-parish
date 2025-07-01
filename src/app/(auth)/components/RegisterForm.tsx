@@ -13,11 +13,14 @@ import { ActionStatus } from "@/src/utils/types";
 export default function RegisterForm() {
 	// TODO: Make it simple
 	const [formState, formAction, pending] = useActionState<ActionStatus>(
-		async (state: ActionStatus, formData?: FormData) => {
+		async (
+			state: ActionStatus,
+			formData?: FormData
+		): Promise<ActionStatus> => {
 			if (!formData) return state; // Ensure formData is present
 
-			const response = await register(formData); // Call login with formData
-			return response;
+			const response = await register(formData); // Call register with formData
+			return response || state; // Ensure we always return ActionStatus
 		},
 		{ type: "", msg: "" } // Initial state
 	);

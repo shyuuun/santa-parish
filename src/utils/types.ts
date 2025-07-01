@@ -36,3 +36,26 @@ export type ActionStatus = {
 };
 
 export type UserAdditionalInfo = Tables<"user_add_info">;
+
+// Loan types
+export type LoanApplication = Tables<"loan_applications">;
+export type LoanDetail = Tables<"loan_details">;
+export type Payment = Tables<"payments">;
+
+// Combined loan application with user info for admin dashboard
+export type LoanApplicationWithUser = LoanApplication & {
+	users_complete_profiles?: {
+		name: string;
+		email: string;
+	};
+};
+
+// Combined loan detail with application and user info
+export type LoanDetailWithInfo = LoanDetail & {
+	loan_applications?: LoanApplication & {
+		users_complete_profiles?: {
+			name: string;
+			email: string;
+		};
+	};
+};

@@ -4,11 +4,13 @@ import Button from "@/src/components/Button";
 import Link from "next/link";
 import CheckboxField from "../components/CheckboxField";
 
-export default function ApplyLoanPage({
+export default async function ApplyLoanPage({
 	searchParams,
 }: {
-	searchParams: { error?: string };
+	searchParams: Promise<{ error?: string }>;
 }) {
+	const resolvedSearchParams = await searchParams;
+
 	return (
 		<div className="p-6 max-w-2xl mx-auto">
 			{/* Header */}
@@ -28,8 +30,8 @@ export default function ApplyLoanPage({
 			</div>
 
 			{/* Error Message */}
-			{searchParams.error && (
-				<Alert type="error" message={searchParams.error} />
+			{resolvedSearchParams.error && (
+				<Alert type="error" message={resolvedSearchParams.error} />
 			)}
 
 			{/* Notice */}

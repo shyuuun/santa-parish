@@ -1,8 +1,6 @@
-import { createClient } from "@/src/utils/supabase/server";
 import Card from "./components/Card";
 
 export default async function HomeDashboard() {
-
 	return (
 		<>
 			<h1 className="mb-4">Home</h1>

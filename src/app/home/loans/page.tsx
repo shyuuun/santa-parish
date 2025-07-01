@@ -17,8 +17,9 @@ type LoanDetail = Database["public"]["Tables"]["loan_details"]["Row"] & {
 export default async function LoansPage({
 	searchParams,
 }: {
-	searchParams: { success?: string };
+	searchParams: Promise<{ success?: string }>;
 }) {
+	const resolvedSearchParams = await searchParams;
 	const { applications, error: appError } = await getUserLoanApplications();
 	const { loans, error: loanError } = await getUserActiveLoans();
 
@@ -31,9 +32,9 @@ export default async function LoansPage({
 	}
 
 	return (
-		<div className="p-6 max-w-6xl mx-auto ">
+		<div className="p-6 max-w-6xl mx-auto">
 			{/* Success Message */}
-			{searchParams.success && (
+			{resolvedSearchParams.success && (
 				<Alert
 					type="success"
 					message="Loan application submitted successfully! Approval may take 1-2 business days."

@@ -1,19 +1,26 @@
 "use client";
 
 import { useActionState } from "react";
-import { AuthStatus, register } from "../actions";
+import { register } from "../actions";
+import { Input } from "@/src/components/shadcn/input";
+import { Label } from "@/src/components/shadcn/label";
 import Loader from "@/src/components/Loader";
 import Link from "next/link";
 import Alert from "@/src/components/Alert";
+import Button from "@/src/components/Button";
+import { ActionStatus } from "@/src/utils/types";
 
 export default function RegisterForm() {
 	// TODO: Make it simple
-	const [formState, formAction, pending] = useActionState<AuthStatus>(
-		async (state: AuthStatus, formData?: FormData) => {
+	const [formState, formAction, pending] = useActionState<ActionStatus>(
+		async (
+			state: ActionStatus,
+			formData?: FormData
+		): Promise<ActionStatus> => {
 			if (!formData) return state; // Ensure formData is present
 
-			const response = await register(formData); // Call login with formData
-			return response;
+			const response = await register(formData); // Call register with formData
+			return response || state; // Ensure we always return ActionStatus
 		},
 		{ type: "", msg: "" } // Initial state
 	);
@@ -35,11 +42,8 @@ export default function RegisterForm() {
 			)}
 			<form action={formAction}>
 				<div className="mb-4">
-					<label className="block text-gray-700 text-sm font-bold mb-2">
-						Email
-					</label>
-					<input
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					<Label>Email</Label>
+					<Input
 						id="email"
 						name="email"
 						type="email"
@@ -48,11 +52,8 @@ export default function RegisterForm() {
 				</div>
 
 				<div className="mb-4">
-					<label className="block text-gray-700 text-sm font-bold mb-2">
-						Password
-					</label>
-					<input
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					<Label>Password</Label>
+					<Input
 						name="password"
 						id="password"
 						type="password"
@@ -61,12 +62,9 @@ export default function RegisterForm() {
 				</div>
 
 				<div className="flex items-center justify-between">
-					<button
-						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-						type="submit"
-					>
+					<Button>
 						{pending ? <Loader size="sm" /> : "Sign In"}
-					</button>
+					</Button>
 					{/* // TODO: Change it when implemented forgot password */}
 					<Link
 						className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"

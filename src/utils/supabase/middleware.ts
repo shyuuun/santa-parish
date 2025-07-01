@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getUserRole } from "../supabaseUtils";
 
 export async function updateSession(request: NextRequest) {
 	let supabaseResponse = NextResponse.next({
@@ -40,16 +41,48 @@ export async function updateSession(request: NextRequest) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	if (
-		!user &&
-		!request.nextUrl.pathname.startsWith("/login") &&
-		!request.nextUrl.pathname.startsWith("/auth")
-	) {
+	const path = request.nextUrl.pathname;
+
+	// you can add more public routes here
+
+	const isPublicRoute =
+		path === "/" ||
+		path.startsWith("/login") ||
+		path.startsWith("/register") ||
+		path.startsWith("/_next") ||
+		path.startsWith("/announcements") ||
+		path.startsWith("/chat") || // TODO: Temporarily make chat publicly accessible
+		path.startsWith("/public");
+
+	console.log("User in middleware:", user?.id);
+
+	console.log("Middleware:", path);
+
+	if (!user && !isPublicRoute) {
 		// no user, potentially respond by redirecting the user to the login page
 		const url = request.nextUrl.clone();
 		url.pathname = "/login";
 		return NextResponse.redirect(url);
 	}
+
+	if (user?.id) {
+		const roleId = await getUserRole(supabase, user.id);
+
+		const requiresAdmin = path.startsWith("/dashboard");
+
+		// Restrict non-admin users
+		if (roleId !== 1 && requiresAdmin) {
+			const url = request.nextUrl.clone();
+			url.pathname = "/";
+			return NextResponse.redirect(url);
+		}
+	}
+
+	// if (!user && !isPublicRoute) {
+	// 	const url = request.nextUrl.clone();
+	// 	url.pathname = "/login";
+	// 	return NextResponse.redirect(url);
+	// }
 
 	// IMPORTANT: You *must* return the supabaseResponse object as it is.
 	// If you're creating a new response object with NextResponse.next() make sure to:

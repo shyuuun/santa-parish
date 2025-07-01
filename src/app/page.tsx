@@ -9,16 +9,28 @@ import {
 	PersonStanding,
 	Shield,
 } from "lucide-react";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/src/components/shadcn/accordion";
 
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
+import AnnouncementsSection from "@/src/components/AnnouncementsSection";
 import { createClient } from "../utils/supabase/server";
 
 export default async function Home() {
 	const supabase = await createClient();
-	const user = await supabase.auth.getUser();
 
-	console.log(`Current User ${user.data.user?.id}`);
+	// Fetch initial announcements for server-side rendering
+	const { data: initialAnnouncements, count } = await supabase
+		.from("announcements")
+		.select("*", { count: "exact" })
+		.order("created_at", { ascending: false })
+		.range(0, 2);
+
 	return (
 		<>
 			<Navbar />
@@ -36,7 +48,7 @@ export default async function Home() {
 						</figure>
 					</section>
 					<section className="max-w-3/4 mx-auto relative text-white">
-						<h1 className="text-4xl text-center mb-4 font-serif">
+						<h1 className="text-center">
 							Empowering our community through financial growth
 							and cooperation
 						</h1>
@@ -44,6 +56,14 @@ export default async function Home() {
 							&quot;Affordable loans, secure savings, and
 							livelihood programs for a brighter tomorrow&quot;
 						</p>
+						<div className="flex justify-center mt-8">
+							<a
+								href="#about-us"
+								className="border-2 border-red-100 text-red-100 bg-transparent hover:border-red-500 hover:bg-red-500 hover:text-white font-semibold px-8 py-3 rounded shadow transition-colors duration-200 text-lg"
+							>
+								Learn More &amp; Join Us
+							</a>
+						</div>
 					</section>
 				</div>
 				<section
@@ -121,15 +141,91 @@ export default async function Home() {
 						/>
 					</article>
 				</section>
-				<section className="max-w-3/4 mx-auto p-12 " id="announce">
-					<h1 className="text-center text-2xl md:text-5xl  font-serif">
-						Announcements
-					</h1>
-					<p className="text-center">To be Added</p>
+				<section className="max-w-3/4 mx-auto mb-16">
+					<h3 className="text-center text-2xl font-bold mb-8 font-serif text-sky-500">
+						Frequently Asked Questions
+					</h3>
+					<Accordion type="single" collapsible className="w-full">
+						<AccordionItem value="item-1">
+							<AccordionTrigger>
+								How do I become a member of the cooperative?
+							</AccordionTrigger>
+							<AccordionContent>
+								To become a member, you need to: 1) Complete our
+								online registration form, 2) Submit required
+								documents for verification, 3) Pay the
+								membership fee and initial share capital, and 4)
+								Wait for admin approval. Once approved,
+								you&apos;ll have full access to our services.
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-2">
+							<AccordionTrigger>
+								What types of loans do you offer?
+							</AccordionTrigger>
+							<AccordionContent>
+								We offer various loan types including: Personal
+								Loans, Business Loans, Emergency Loans, and
+								Microfinance Loans. Each loan type has different
+								terms, interest rates, and requirements. Members
+								must be in good standing to qualify for loans.
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-3">
+							<AccordionTrigger>
+								What are the benefits of being a member?
+							</AccordionTrigger>
+							<AccordionContent>
+								Members enjoy: Access to low-interest loans,
+								competitive savings rates, dividend shares from
+								cooperative profits, free financial literacy
+								training, insurance coverage options, and
+								participation in community development programs.
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-4">
+							<AccordionTrigger>
+								How long does the loan approval process take?
+							</AccordionTrigger>
+							<AccordionContent>
+								Typically, loan applications are processed
+								within 1-2 business days. However, the actual
+								approval time may vary depending on the loan
+								type, amount, and completeness of submitted
+								requirements. Emergency loans may be processed
+								more quickly.
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-5">
+							<AccordionTrigger>
+								How can I check my account balance and
+								transaction history?
+							</AccordionTrigger>
+							<AccordionContent>
+								Members can access their account information
+								through our online portal. Simply log in to your
+								account to view your balance, transaction
+								history, loan status, and other important
+								account details. You can also visit our office
+								for in-person assistance.
+							</AccordionContent>
+						</AccordionItem>
+					</Accordion>
 				</section>
-			</main>
+				<section className="bg-white py-16" id="announce">
+					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+						<h1 className="text-center text-4xl md:text-5xl font-serif mb-12 text-sky-800">
+							Latest Announcements
+						</h1>
+						<AnnouncementsSection
+							initialAnnouncements={initialAnnouncements || []}
+							totalCount={count || 0}
+						/>
+					</div>
+				</section>
 
-			<Footer />
+				<Footer />
+			</main>
 		</>
 	);
 }

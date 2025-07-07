@@ -46,7 +46,7 @@ export default function UserPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data, isLoading, pagination, refresh } = useFetchData<Users>({
-    table: "users_with_roles",
+    table: "user_with_roles",
     page,
     limit: 5,
     searchQuery: searchQuery,

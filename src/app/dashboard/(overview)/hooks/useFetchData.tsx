@@ -1,5 +1,5 @@
 import { createClient } from "@/src/utils/supabase/cilent";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 interface WhereCondition {
 	column: string;
@@ -55,6 +55,10 @@ export function useFetchData<T>({
 	const [refreshToken, setRefreshToken] = useState(0);
 	const refresh = () => setRefreshToken((prev) => prev + 1);
 
+	// Memoize array dependencies to prevent infinite re-renders
+	const memoizedWhere = useMemo(() => where, [JSON.stringify(where)]);
+	const memoizedSearchColumn = useMemo(() => searchColumn, [JSON.stringify(searchColumn)]);
+
 	// Process the search query and columns
 	let columnResult = "";
 
@@ -81,8 +85,8 @@ export function useFetchData<T>({
 					.select(columnResult, { count: "exact" });
 
 				// Apply where conditions if provided
-				if (where && where.length > 0) {
-					where.forEach((condition) => {
+				if (memoizedWhere && memoizedWhere.length > 0) {
+					memoizedWhere.forEach((condition) => {
 						switch (condition.operator) {
 							case "eq":
 								query = query.eq(
@@ -106,7 +110,7 @@ export function useFetchData<T>({
 
 				// Add search condition if searchQuery exists
 				if (searchQuery) {
-					searchColumn.forEach((column) => {
+					memoizedSearchColumn.forEach((column) => {
 						// console.log("useAdmin Hook: Search Column", column);
 						query = query.or(`${column}.ilike.%${searchQuery}%`);
 					});
@@ -154,8 +158,8 @@ export function useFetchData<T>({
 		refreshToken,
 		table,
 		columnResult,
-		where,
-		searchColumn,
+		memoizedWhere,
+		memoizedSearchColumn,
 	]);
 
 	return {

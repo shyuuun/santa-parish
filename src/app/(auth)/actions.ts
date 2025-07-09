@@ -89,3 +89,27 @@ export async function register(
 		};
 	}
 }
+
+export async function sendPasswordResetEmail(
+	formData: FormData
+): Promise<ActionStatus | void> {
+	const supabase = await createClient();
+
+	const email = formData.get("email") as string;
+
+	console.log(`Sending password reset email to: ${email}`);
+
+	const { error } = await supabase.auth.resetPasswordForEmail(email);
+
+	if (error) {
+		return {
+			type: "failed",
+			msg: `${error}`,
+		};
+	} else {
+		return {
+			type: "success",
+			msg: `Password reset email sent!`,
+		};
+	}
+}

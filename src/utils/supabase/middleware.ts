@@ -52,6 +52,7 @@ export async function updateSession(request: NextRequest) {
 		path.startsWith("/_next") ||
 		path.startsWith("/announcements") ||
 		path.startsWith("/chat") || // TODO: Temporarily make chat publicly accessible
+		path.startsWith("/forget-password") ||
 		path.startsWith("/public");
 
 	console.log("User in middleware:", user?.id);

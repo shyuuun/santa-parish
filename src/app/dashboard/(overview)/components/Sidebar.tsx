@@ -6,6 +6,7 @@ import { RouteLink } from "@/src/utils/types";
 import { usePathname } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { useState } from "react";
+import { logout } from "../actions/logout";
 
 interface SidebarProps {
 	links: RouteLink[];
@@ -98,13 +99,15 @@ export default function Sidebar({ links }: SidebarProps) {
 						/>
 					);
 				})}
-				<button
-					className="sidebar_link gap-4 flex justify-start items-center mt-auto"
-					onClick={() => console.log("logout click")}
-				>
-					<LogOut size={16} strokeWidth={1.5} />
-					Logout
-				</button>
+				<form action={logout} className="mt-auto">
+					<button
+						type="submit"
+						className="sidebar_link gap-4 flex justify-start items-center mt-auto cursor-pointer w-full"
+					>
+						<LogOut size={16} strokeWidth={1.5} />
+						Logout
+					</button>
+				</form>
 			</ul>
 		</aside>
 	);

@@ -99,7 +99,7 @@ export default function Sidebar({ links }: SidebarProps) {
 						/>
 					);
 				})}
-				<form action={logout}>
+				<form action={logout} className="mt-auto">
 					<button
 						type="submit"
 						className="sidebar_link gap-4 flex justify-start items-center mt-auto cursor-pointer w-full"

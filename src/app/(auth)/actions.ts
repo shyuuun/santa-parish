@@ -97,19 +97,95 @@ export async function sendPasswordResetEmail(
 
 	const email = formData.get("email") as string;
 
-	console.log(`Sending password reset email to: ${email}`);
-
-	const { error } = await supabase.auth.resetPasswordForEmail(email);
-
-	if (error) {
+	if (!email) {
 		return {
 			type: "failed",
-			msg: `${error}`,
+			msg: "Email is required",
+		};
+	}
+
+	console.log(`Sending password reset email to: ${email}`);
+
+	const { error } = await supabase.auth.resetPasswordForEmail(email, {
+		redirectTo: `${
+			process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+		}/reset-password`,
+	});
+
+	if (error) {
+		console.error("Password reset error:", error);
+		return {
+			type: "failed",
+			msg: `Error: ${error.message}`,
 		};
 	} else {
 		return {
 			type: "success",
-			msg: `Password reset email sent!`,
+			msg: `If an account with that email exists, a password reset link has been sent.`,
+		};
+	}
+}
+
+export async function updatePassword(
+	formData: FormData
+): Promise<ActionStatus | void> {
+	const supabase = await createClient();
+
+	// Check if user has a valid session (from reset link)
+	const {
+		data: { user },
+		error: sessionError,
+	} = await supabase.auth.getUser();
+
+	if (sessionError || !user) {
+		return {
+			type: "failed",
+			msg: "Invalid or expired reset link. Please request a new password reset.",
+		};
+	}
+
+	const password = formData.get("password") as string;
+	const confirmPassword = formData.get("confirmPassword") as string;
+
+	if (!password || !confirmPassword) {
+		return {
+			type: "failed",
+			msg: "Both password fields are required",
+		};
+	}
+
+	if (password !== confirmPassword) {
+		return {
+			type: "failed",
+			msg: "Passwords do not match",
+		};
+	}
+
+	if (password.length < 6) {
+		return {
+			type: "failed",
+			msg: "Password must be at least 6 characters long",
+		};
+	}
+
+	console.log("Updating password for user:", user.email);
+
+	const { error } = await supabase.auth.updateUser({
+		password: password,
+	});
+
+	if (error) {
+		console.error("Password update error:", error);
+		return {
+			type: "failed",
+			msg: `Error: ${error.message}`,
+		};
+	} else {
+		// Sign out the user after password update to force re-login with new password
+		await supabase.auth.signOut();
+		return {
+			type: "success",
+			msg: "Password updated successfully! Please log in with your new password.",
 		};
 	}
 }

@@ -6,11 +6,13 @@ import { Label } from "@/src/components/shadcn/label";
 import { ActionStatus } from "@/src/utils/types";
 import { Loader } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
-import { sendPasswordResetEmail } from "../actions";
+import { useActionState, useEffect } from "react";
+import { updatePassword } from "../actions";
 import Alert from "@/src/components/Alert";
+import { useRouter } from "next/navigation";
 
-export default function ResetForm() {
+export default function UpdatePasswordForm() {
+	const router = useRouter();
 	const [formState, dispatch, pending] = useActionState<
 		ActionStatus,
 		FormData
@@ -19,16 +21,29 @@ export default function ResetForm() {
 			state: ActionStatus,
 			formData: FormData
 		): Promise<ActionStatus> => {
-			const response = await sendPasswordResetEmail(formData);
+			const response = await updatePassword(formData);
 			return (
 				response || {
 					type: "success",
-					msg: "If your email exists, a reset link has been sent.",
+					msg: "Password updated successfully!",
 				}
 			);
 		},
 		{ type: "", msg: "" }
 	);
+
+	// Redirect to login after successful password update
+	useEffect(() => {
+		if (
+			formState.type === "success" &&
+			formState.msg?.includes("successfully")
+		) {
+			const timer = setTimeout(() => {
+				router.push("/login");
+			}, 2000); // Wait 2 seconds to show success message
+			return () => clearTimeout(timer);
+		}
+	}, [formState, router]);
 
 	return (
 		<>
@@ -46,16 +61,27 @@ export default function ResetForm() {
 			)}
 			<form action={dispatch}>
 				<div className="mb-4">
-					<Label>Email</Label>
+					<Label>New Password</Label>
 					<Input
-						id="email"
-						name="email"
-						type="email"
-						placeholder="Email"
+						id="password"
+						name="password"
+						type="password"
+						placeholder="Enter your new password"
+						required
+					/>
+				</div>
+				<div className="mb-4">
+					<Label>Confirm Password</Label>
+					<Input
+						id="confirmPassword"
+						name="confirmPassword"
+						type="password"
+						placeholder="Confirm your new password"
+						required
 					/>
 				</div>
 				<Button className="w-full mb-4" type="submit">
-					{pending ? <Loader size="sm" /> : "Reset Password"}
+					{pending ? <Loader size="sm" /> : "Update Password"}
 				</Button>
 
 				<Link className="link" href="/login">

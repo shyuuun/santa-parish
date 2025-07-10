@@ -64,12 +64,20 @@ export default function LoginForm() {
 					<Button>
 						{pending ? <Loader size="sm" /> : "Sign In"}
 					</Button>
-					{/* // TODO: Change it when implemented forgot password */}
-					<Link className="link" href="/register">
-						Register
+					<Link className="link" href="/forget-password">
+						Forgot Password?
 					</Link>
 				</div>
 			</form>
+
+			<div className="text-center mt-4">
+				<p className="text-sm text-gray-600">
+					Don&apos;t have an account?{" "}
+					<Link className="link" href="/register">
+						Register here
+					</Link>
+				</p>
+			</div>
 		</>
 	);
 }

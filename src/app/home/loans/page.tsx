@@ -50,6 +50,14 @@ export default async function LoansPage({
 					<p className="text-gray-600 mt-2">
 						Manage your loan applications and active loans
 					</p>
+					<div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+						<p className="text-sm text-blue-700">
+							<strong>Note:</strong> All loans use diminishing
+							balance interest (2.5% monthly) with 7% total
+							deductions (2% share capital, 2% savings, 3% service
+							fee) applied before disbursement.
+						</p>
+					</div>
 				</div>
 				<Link href="/home/loans/apply">
 					<Button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">

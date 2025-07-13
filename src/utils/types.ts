@@ -76,3 +76,20 @@ export type AnnouncementViewProps = {
 	backUrl?: string;
 	backLabel?: string;
 };
+
+// Loan calculation types
+export type LoanDeductions = {
+	shareCapital: number;
+	savingsDeposit: number;
+	serviceFee: number;
+	totalDeductions: number;
+	netCashReceived: number;
+};
+
+export type AmortizationScheduleItem = {
+	month: number;
+	monthlyPayment: number;
+	interestPayment: number;
+	principalPayment: number;
+	remainingBalance: number;
+};

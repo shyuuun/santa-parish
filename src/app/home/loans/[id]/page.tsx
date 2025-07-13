@@ -4,6 +4,7 @@ import Badge from "@/src/components/Badge";
 import Link from "next/link";
 import { createClient } from "@/src/utils/supabase/server";
 import { Database } from "@/src/utils/database.types";
+import { calculateLoanDeductions } from "../components/LoanCalculator";
 
 type Payment = Database["public"]["Tables"]["payments"]["Row"];
 
@@ -79,6 +80,11 @@ export default async function LoanDetailsPage({
 					loan.principal_amount) *
 			  100
 			: 0;
+
+	// Calculate what the original deductions would have been
+	const originalAmount =
+		loan.loan_applications?.amount_requested || loan.principal_amount;
+	const deductions = calculateLoanDeductions(originalAmount);
 
 	return (
 		<div className="p-6 max-w-4xl mx-auto">
@@ -211,6 +217,82 @@ export default async function LoanDetailsPage({
 									₱{loan.remaining_balance?.toLocaleString()}
 								</p>
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* Loan Deductions Information */}
+			<div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+				<h2 className="text-xl font-semibold text-blue-900 mb-4">
+					Loan Deductions Applied
+				</h2>
+				<p className="text-sm text-blue-700 mb-4">
+					The following deductions were applied before loan
+					disbursement:
+				</p>
+				<div className="grid md:grid-cols-2 gap-6">
+					<div className="bg-white rounded-lg p-4 border border-blue-100">
+						<h3 className="font-medium text-blue-800 mb-3">
+							Deduction Breakdown
+						</h3>
+						<div className="space-y-2 text-sm">
+							<div className="flex justify-between">
+								<span className="text-blue-700">
+									Original Loan Amount:
+								</span>
+								<span className="font-medium text-blue-900">
+									₱{originalAmount.toLocaleString()}
+								</span>
+							</div>
+							<div className="flex justify-between text-red-600">
+								<span>Share Capital (2%):</span>
+								<span>
+									-₱{deductions.shareCapital.toLocaleString()}
+								</span>
+							</div>
+							<div className="flex justify-between text-red-600">
+								<span>Savings Deposit (2%):</span>
+								<span>
+									-₱
+									{deductions.savingsDeposit.toLocaleString()}
+								</span>
+							</div>
+							<div className="flex justify-between text-red-600">
+								<span>Service Fee (3%):</span>
+								<span>
+									-₱{deductions.serviceFee.toLocaleString()}
+								</span>
+							</div>
+							<hr className="border-blue-200" />
+							<div className="flex justify-between font-semibold">
+								<span className="text-green-700">
+									Net Cash Received:
+								</span>
+								<span className="text-green-800">
+									₱
+									{deductions.netCashReceived.toLocaleString()}
+								</span>
+							</div>
+						</div>
+					</div>
+					<div className="bg-white rounded-lg p-4 border border-blue-100">
+						<h3 className="font-medium text-blue-800 mb-3">
+							Important Notes
+						</h3>
+						<div className="space-y-2 text-sm text-blue-700">
+							<p>
+								• Share Capital contributes to your membership
+								investment
+							</p>
+							<p>
+								• Savings Deposit can be withdrawn after loan
+								completion
+							</p>
+							<p>• Service Fee covers loan processing costs</p>
+							<p>
+								• Interest is calculated on diminishing balance
+							</p>
 						</div>
 					</div>
 				</div>

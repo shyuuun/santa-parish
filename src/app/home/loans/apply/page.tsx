@@ -3,6 +3,7 @@ import Alert from "@/src/components/Alert";
 import Button from "@/src/components/Button";
 import Link from "next/link";
 import CheckboxField from "../components/CheckboxField";
+import LoanCalculatorForm from "../components/LoanCalculatorForm";
 
 export default async function ApplyLoanPage({
 	searchParams,
@@ -55,6 +56,9 @@ export default async function ApplyLoanPage({
 					</div>
 				</div>
 			</div>
+
+			{/* Loan Calculator */}
+			<LoanCalculatorForm />
 
 			{/* Application Form */}
 			<form action={createLoanApplication} className="space-y-6">
@@ -142,8 +146,18 @@ export default async function ApplyLoanPage({
 					</h2>
 					<div className="space-y-3 text-sm text-gray-700">
 						<p>
-							• Interest rates and loan terms will be determined
-							by the cooperative based on your application
+							• Interest is calculated on diminishing balance
+							(2.5% monthly on remaining balance)
+						</p>
+						<p>
+							• Loan deductions will be applied before
+							disbursement:
+							<br />
+							&nbsp;&nbsp;- Share Capital: 2% of loan amount
+							<br />
+							&nbsp;&nbsp;- Savings Deposit: 2% of loan amount
+							<br />
+							&nbsp;&nbsp;- Service Fee: 3% of loan amount
 						</p>
 						<p>
 							• All loans are subject to approval by the loan

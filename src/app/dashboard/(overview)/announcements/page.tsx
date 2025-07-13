@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -23,18 +21,13 @@ import {
 import { admin } from "@/src/utils/route";
 import { useFetchData } from "../hooks/useFetchData";
 import AddAnnouncementDialog from "./components/AddAnnouncementDialog";
-
-type Announcement = {
-	id: number;
-	title: string;
-	content: string;
-	created_at: string;
-	image_url?: string;
-};
+import { Announcement } from "@/src/utils/types";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Announcements() {
-	const router = useRouter();
 	const [page, setPage] = useState(1);
+	const router = useRouter();
 
 	const {
 		data: announcements,

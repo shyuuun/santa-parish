@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ImageIcon } from "lucide-react";
 import type { Announcement } from "@/src/utils/types";
 
 interface PostViewerProps {
@@ -6,53 +7,55 @@ interface PostViewerProps {
 }
 
 export default function PostViewer({ post }: PostViewerProps) {
-	const formatDate = (dateString: string) => {
-		const date = new Date(dateString);
-		return date.toLocaleDateString("en-US", {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-		});
-	};
-
 	return (
-		<article className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+		<article className="bg-white shadow-lg rounded-lg overflow-hidden">
+			{/* Featured Image */}
 			{post.image_url && (
-				<div className="relative w-full h-[400px]">
+				<div className="relative w-full h-[400px] overflow-hidden">
 					<Image
 						src={post.image_url}
-						alt={post.title}
+						alt={`Featured image for ${post.title}`}
 						fill
-						className="object-cover"
+						className="object-cover transition-transform duration-300 hover:scale-105"
+						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
 						priority
 					/>
+					<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
 				</div>
 			)}
 
+			{/* Content */}
 			<div className="p-8">
-				<div className="flex flex-col space-y-4">
-					<div className="flex items-center justify-between">
-						<h1 className="text-3xl font-bold text-gray-900">
-							{post.title}
-						</h1>
-						{post.tag && (
-							<span className="px-4 py-2 bg-red-100 text-red-800 rounded-full text-sm">
-								{post.tag}
-							</span>
-						)}
+				{/* Article Body */}
+				<div
+					className="prose prose-lg prose-gray max-w-none
+						prose-headings:text-gray-900 prose-headings:font-bold
+						prose-p:text-gray-700 prose-p:leading-relaxed
+						prose-a:text-blue-600 prose-a:font-medium hover:prose-a:text-blue-700
+						prose-strong:text-gray-900 prose-strong:font-semibold
+						prose-ul:text-gray-700 prose-ol:text-gray-700
+						prose-li:marker:text-blue-600
+						prose-blockquote:border-l-4 prose-blockquote:border-blue-500 
+						prose-blockquote:bg-blue-50 prose-blockquote:px-4 prose-blockquote:py-2
+						prose-blockquote:text-blue-900 prose-blockquote:not-italic
+						prose-code:bg-gray-100 prose-code:text-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+						prose-pre:bg-gray-900 prose-pre:text-gray-100
+						prose-img:rounded-lg prose-img:shadow-md
+						focus-within:outline-2 focus-within:outline-blue-500"
+					dangerouslySetInnerHTML={{ __html: post.content }}
+					role="main"
+					aria-label="Announcement content"
+				/>
+
+				{/* Article Footer */}
+				{!post.image_url && (
+					<div className="mt-8 pt-6 border-t border-gray-200">
+						<div className="flex items-center gap-2 text-sm text-gray-500">
+							<ImageIcon className="w-4 h-4" aria-hidden="true" />
+							<span>No featured image for this announcement</span>
+						</div>
 					</div>
-
-					<time className="text-sm text-gray-500">
-						Posted on {formatDate(post.created_at)}
-					</time>
-
-					<div
-						className="prose prose-lg max-w-none mt-8"
-						dangerouslySetInnerHTML={{ __html: post.content }}
-					/>
-				</div>
+				)}
 			</div>
 		</article>
 	);

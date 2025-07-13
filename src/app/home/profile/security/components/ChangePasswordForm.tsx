@@ -33,7 +33,10 @@ export default function ChangePasswordForm() {
 
 	const supabase = createClient();
 
-	const handleInputChange = (field: keyof ChangePasswordFormData, value: string) => {
+	const handleInputChange = (
+		field: keyof ChangePasswordFormData,
+		value: string
+	) => {
 		setFormData((prev) => ({
 			...prev,
 			[field]: value,
@@ -69,7 +72,9 @@ export default function ChangePasswordForm() {
 		const hasUpperCase = /[A-Z]/.test(formData.newPassword);
 		const hasLowerCase = /[a-z]/.test(formData.newPassword);
 		const hasNumbers = /\d/.test(formData.newPassword);
-		const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(formData.newPassword);
+		const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(
+			formData.newPassword
+		);
 
 		if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
 			return "Password must contain uppercase, lowercase, numbers, and special characters";
@@ -79,7 +84,7 @@ export default function ChangePasswordForm() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		
+
 		const validationError = validateForm();
 		if (validationError) {
 			setAlert({ type: "error", message: validationError });
@@ -101,7 +106,8 @@ export default function ChangePasswordForm() {
 
 			setAlert({
 				type: "success",
-				message: "Password updated successfully! Please keep your new password secure.",
+				message:
+					"Password updated successfully! Please keep your new password secure.",
 			});
 
 			// Reset form
@@ -114,7 +120,10 @@ export default function ChangePasswordForm() {
 			console.error("Password update error:", error);
 			setAlert({
 				type: "error",
-				message: error instanceof Error ? error.message : "Failed to update password. Please try again.",
+				message:
+					error instanceof Error
+						? error.message
+						: "Failed to update password. Please try again.",
 			});
 		} finally {
 			setIsLoading(false);
@@ -123,7 +132,7 @@ export default function ChangePasswordForm() {
 
 	const getPasswordStrength = (password: string) => {
 		if (!password) return { strength: 0, label: "", color: "" };
-		
+
 		let score = 0;
 		if (password.length >= 8) score++;
 		if (/[A-Z]/.test(password)) score++;
@@ -131,9 +140,12 @@ export default function ChangePasswordForm() {
 		if (/\d/.test(password)) score++;
 		if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
 
-		if (score <= 2) return { strength: score, label: "Weak", color: "bg-red-500" };
-		if (score <= 3) return { strength: score, label: "Fair", color: "bg-yellow-500" };
-		if (score <= 4) return { strength: score, label: "Good", color: "bg-blue-500" };
+		if (score <= 2)
+			return { strength: score, label: "Weak", color: "bg-red-500" };
+		if (score <= 3)
+			return { strength: score, label: "Fair", color: "bg-yellow-500" };
+		if (score <= 4)
+			return { strength: score, label: "Good", color: "bg-blue-500" };
 		return { strength: score, label: "Strong", color: "bg-green-500" };
 	};
 
@@ -141,9 +153,7 @@ export default function ChangePasswordForm() {
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
-			{alert && (
-				<Alert type={alert.type} message={alert.message} />
-			)}
+			{alert && <Alert type={alert.type} message={alert.message} />}
 
 			{/* Current Password */}
 			<div className="space-y-2">
@@ -153,7 +163,9 @@ export default function ChangePasswordForm() {
 						id="currentPassword"
 						type={showPasswords.current ? "text" : "password"}
 						value={formData.currentPassword}
-						onChange={(e) => handleInputChange("currentPassword", e.target.value)}
+						onChange={(e) =>
+							handleInputChange("currentPassword", e.target.value)
+						}
 						placeholder="Enter your current password"
 						className="pr-10"
 						required
@@ -182,7 +194,9 @@ export default function ChangePasswordForm() {
 						id="newPassword"
 						type={showPasswords.new ? "text" : "password"}
 						value={formData.newPassword}
-						onChange={(e) => handleInputChange("newPassword", e.target.value)}
+						onChange={(e) =>
+							handleInputChange("newPassword", e.target.value)
+						}
 						placeholder="Enter your new password"
 						className="pr-10"
 						required
@@ -201,7 +215,7 @@ export default function ChangePasswordForm() {
 						)}
 					</Button>
 				</div>
-				
+
 				{/* Password Strength Indicator */}
 				{formData.newPassword && (
 					<div className="space-y-2">
@@ -209,19 +223,28 @@ export default function ChangePasswordForm() {
 							<span className="text-sm text-muted-foreground">
 								Password strength:
 							</span>
-							<span className={`text-sm font-medium ${
-								passwordStrength.label === "Strong" ? "text-green-600" :
-								passwordStrength.label === "Good" ? "text-blue-600" :
-								passwordStrength.label === "Fair" ? "text-yellow-600" :
-								"text-red-600"
-							}`}>
+							<span
+								className={`text-sm font-medium ${
+									passwordStrength.label === "Strong"
+										? "text-green-600"
+										: passwordStrength.label === "Good"
+										? "text-blue-600"
+										: passwordStrength.label === "Fair"
+										? "text-yellow-600"
+										: "text-red-600"
+								}`}
+							>
 								{passwordStrength.label}
 							</span>
 						</div>
 						<div className="w-full bg-gray-200 rounded-full h-2">
 							<div
 								className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
-								style={{ width: `${(passwordStrength.strength / 5) * 100}%` }}
+								style={{
+									width: `${
+										(passwordStrength.strength / 5) * 100
+									}%`,
+								}}
 							/>
 						</div>
 					</div>
@@ -236,7 +259,9 @@ export default function ChangePasswordForm() {
 						id="confirmPassword"
 						type={showPasswords.confirm ? "text" : "password"}
 						value={formData.confirmPassword}
-						onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+						onChange={(e) =>
+							handleInputChange("confirmPassword", e.target.value)
+						}
 						placeholder="Confirm your new password"
 						className="pr-10"
 						required
@@ -255,17 +280,16 @@ export default function ChangePasswordForm() {
 						)}
 					</Button>
 				</div>
-				{formData.confirmPassword && formData.newPassword !== formData.confirmPassword && (
-					<p className="text-sm text-red-600">Passwords do not match</p>
-				)}
+				{formData.confirmPassword &&
+					formData.newPassword !== formData.confirmPassword && (
+						<p className="text-sm text-red-600">
+							Passwords do not match
+						</p>
+					)}
 			</div>
 
 			{/* Submit Button */}
-			<Button
-				type="submit"
-				className="w-full"
-				disabled={isLoading}
-			>
+			<Button type="submit" className="w-full" disabled={isLoading}>
 				<Lock className="w-4 h-4 mr-2" />
 				{isLoading ? "Updating Password..." : "Update Password"}
 			</Button>
@@ -274,19 +298,49 @@ export default function ChangePasswordForm() {
 			<div className="text-xs text-muted-foreground space-y-1">
 				<p className="font-medium">Password Requirements:</p>
 				<ul className="space-y-1 ml-4">
-					<li className={`${formData.newPassword.length >= 8 ? "text-green-600" : ""}`}>
+					<li
+						className={`${
+							formData.newPassword.length >= 8
+								? "text-green-600"
+								: ""
+						}`}
+					>
 						• At least 8 characters long
 					</li>
-					<li className={`${/[A-Z]/.test(formData.newPassword) ? "text-green-600" : ""}`}>
+					<li
+						className={`${
+							/[A-Z]/.test(formData.newPassword)
+								? "text-green-600"
+								: ""
+						}`}
+					>
 						• Contains uppercase letters (A-Z)
 					</li>
-					<li className={`${/[a-z]/.test(formData.newPassword) ? "text-green-600" : ""}`}>
+					<li
+						className={`${
+							/[a-z]/.test(formData.newPassword)
+								? "text-green-600"
+								: ""
+						}`}
+					>
 						• Contains lowercase letters (a-z)
 					</li>
-					<li className={`${/\d/.test(formData.newPassword) ? "text-green-600" : ""}`}>
+					<li
+						className={`${
+							/\d/.test(formData.newPassword)
+								? "text-green-600"
+								: ""
+						}`}
+					>
 						• Contains numbers (0-9)
 					</li>
-					<li className={`${/[!@#$%^&*(),.?":{}|<>]/.test(formData.newPassword) ? "text-green-600" : ""}`}>
+					<li
+						className={`${
+							/[!@#$%^&*(),.?":{}|<>]/.test(formData.newPassword)
+								? "text-green-600"
+								: ""
+						}`}
+					>
 						• Contains special characters (!@#$%^&*)
 					</li>
 				</ul>

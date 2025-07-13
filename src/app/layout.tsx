@@ -24,10 +24,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" title="Santa Lucia Parish Multipurpose Cooperative">
 			<body className={`${inter.variable} ${arvo.variable}`}>
-				<NextTopLoader
-					color="linear-gradient(90deg, #3B82F6, #8B5CF6, #EC4899)"
-					height={8}
-				/>
+				<NextTopLoader color="#a78bfa" height={12} />
 				{children}
 				<Toaster />
 			</body>

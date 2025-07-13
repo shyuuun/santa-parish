@@ -4,7 +4,7 @@ import Button from "@/src/components/Button";
 import { Input } from "@/src/components/shadcn/input";
 import { Label } from "@/src/components/shadcn/label";
 import { ActionStatus } from "@/src/utils/types";
-import { Loader } from "lucide-react";
+import Loader from "@/src/components/Loader";
 import Link from "next/link";
 import { useActionState } from "react";
 import { sendPasswordResetEmail } from "../actions";
@@ -55,7 +55,7 @@ export default function ResetForm() {
 						required
 					/>
 				</div>
-				<Button className="w-full mb-4" type="submit">
+				<Button className="w-full mb-4 text-center" type="submit">
 					{pending ? <Loader size="sm" /> : "Reset Password"}
 				</Button>
 

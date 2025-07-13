@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Announcement } from "./AnnouncementCard";
+import type { Announcement } from "@/src/utils/types";
 
 interface PostViewerProps {
 	post: Announcement;

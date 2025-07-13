@@ -40,6 +40,7 @@ export default function Announcements() {
 		data: announcements,
 		pagination,
 		isLoading,
+		refresh,
 	} = useFetchData<Announcement>({
 		table: "announcements",
 		page,
@@ -68,7 +69,7 @@ export default function Announcements() {
 			</Breadcrumb>
 
 			<div className="flex justify-end mb-4">
-				<AddAnnouncementDialog />
+				<AddAnnouncementDialog onAnnouncementAdded={refresh} />
 			</div>
 
 			{isLoading ? (

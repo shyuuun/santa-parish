@@ -59,3 +59,20 @@ export type LoanDetailWithInfo = LoanDetail & {
 		};
 	};
 };
+
+// Announcement types
+export type Announcement = Tables<"announcements">;
+
+export type AnnouncementCardProps = {
+	announcement: Announcement;
+	isAdmin?: boolean;
+	onDelete?: () => void;
+	onRefresh?: () => void;
+};
+
+export type AnnouncementViewProps = {
+	announcement: Announcement;
+	isAdmin?: boolean;
+	backUrl?: string;
+	backLabel?: string;
+};

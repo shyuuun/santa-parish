@@ -1,23 +1,8 @@
 import Image from "next/image";
 import parishLogo from "@/public/logo.svg";
 import UpdatePasswordForm from "@/src/app/(auth)/components/UpdatePasswordForm";
-import { redirect } from "next/navigation";
 
-interface ResetPasswordProps {
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function ResetPassword({
-	searchParams,
-}: ResetPasswordProps) {
-	const params = await searchParams;
-	const token = params.token;
-	const type = params.type;
-
-	// Check if this is a valid password reset request
-	if (!token || type !== "recovery") {
-		redirect("/forget-password");
-	}
+export default async function ResetPassword() {
 	return (
 		<section className="px-4 py-8 bg-white opacity-90">
 			<Image

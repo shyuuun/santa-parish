@@ -104,6 +104,15 @@ export async function sendPasswordResetEmail(
 		};
 	}
 
+	// Validate email format
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(email)) {
+		return {
+			type: "failed",
+			msg: "Please enter a valid email address",
+		};
+	}
+
 	console.log(`Sending password reset email to: ${email}`);
 
 	const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -131,16 +140,15 @@ export async function updatePassword(
 ): Promise<ActionStatus | void> {
 	const supabase = await createClient();
 
-	// Check if user has a valid session (from reset link)
+	// First, verify we have an authenticated user
 	const {
 		data: { user },
-		error: sessionError,
 	} = await supabase.auth.getUser();
 
-	if (sessionError || !user) {
+	if (!user) {
 		return {
 			type: "failed",
-			msg: "Invalid or expired reset link. Please request a new password reset.",
+			msg: "You must be authenticated to update your password",
 		};
 	}
 
@@ -168,8 +176,6 @@ export async function updatePassword(
 		};
 	}
 
-	console.log("Updating password for user:", user.email);
-
 	const { error } = await supabase.auth.updateUser({
 		password: password,
 	});
@@ -180,12 +186,10 @@ export async function updatePassword(
 			type: "failed",
 			msg: `Error: ${error.message}`,
 		};
-	} else {
-		// Sign out the user after password update to force re-login with new password
-		await supabase.auth.signOut();
-		return {
-			type: "success",
-			msg: "Password updated successfully! Please log in with your new password.",
-		};
 	}
+
+	return {
+		type: "success",
+		msg: "Password updated successfully!",
+	};
 }

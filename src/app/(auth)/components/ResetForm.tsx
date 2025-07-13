@@ -46,12 +46,13 @@ export default function ResetForm() {
 			)}
 			<form action={dispatch}>
 				<div className="mb-4">
-					<Label>Email</Label>
+					<Label htmlFor="email">Email</Label>
 					<Input
 						id="email"
 						name="email"
 						type="email"
-						placeholder="Email"
+						placeholder="Enter your email address"
+						required
 					/>
 				</div>
 				<Button className="w-full mb-4" type="submit">

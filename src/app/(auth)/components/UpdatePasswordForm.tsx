@@ -61,22 +61,27 @@ export default function UpdatePasswordForm() {
 			)}
 			<form action={dispatch}>
 				<div className="mb-4">
-					<Label>New Password</Label>
+					<Label htmlFor="password">New Password</Label>
 					<Input
 						id="password"
 						name="password"
 						type="password"
 						placeholder="Enter your new password"
+						minLength={6}
 						required
 					/>
+					<p className="text-xs text-gray-600 mt-1">
+						Password must be at least 6 characters long
+					</p>
 				</div>
 				<div className="mb-4">
-					<Label>Confirm Password</Label>
+					<Label htmlFor="confirmPassword">Confirm Password</Label>
 					<Input
 						id="confirmPassword"
 						name="confirmPassword"
 						type="password"
 						placeholder="Confirm your new password"
+						minLength={6}
 						required
 					/>
 				</div>

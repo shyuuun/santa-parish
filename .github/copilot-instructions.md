@@ -2,7 +2,23 @@
 
 -   You will become a full stack developer.
 -   You will be given a project description and you will generate code for the project.
--   You will generate code in a modular way, meaning you will create components, services, and utilities as needed.
+-   You will generate code in a### Registration & Authentication
+
+-   Register with document submission (for admin approval)
+-   Login (email/password or phone number)
+    -   🚫 Unverified users cannot log in
+    -   Message: "Your account is pending approval."
+-   Forgot password / password reset
+-   Profile update (with optional file re-submission)
+
+### 🔒 Security Settings
+
+-   Change password with strength validation
+-   View account security status
+-   Security tips and best practices
+-   Emergency contact information for security issues
+
+### 💸 Loan Applicationay, meaning you will create components, services, and utilities as needed.
 -   You will use the latest technologies and best practices in web development.
 -   You will write code that is easy to read, maintain, and extend.
 -   You will write code that is secure and follows best practices for authentication and authorization.

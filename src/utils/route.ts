@@ -13,6 +13,8 @@ export const user: Route = {
 	home: "/home",
 	loan: "/home/loans",
 	profile: "/home/profile",
+	profileEdit: "/home/profile/edit",
+	profileSecurity: "/home/profile/security",
 	transaction: "/home/transaction",
 };
 

@@ -32,6 +32,7 @@ import {
 	CreditCard,
 } from "lucide-react";
 import Link from "next/link";
+import { user as userRoutes } from "@/src/utils/route";
 
 export default async function ProfilePage() {
 	const supabase = await createClient();
@@ -118,9 +119,11 @@ export default async function ProfilePage() {
 							</div>
 						</div>
 						<div className="ml-auto">
-							<Button variant="outline" className="gap-2">
-								<Edit3 className="w-4 h-4" />
-								Edit Profile
+							<Button variant="outline" className="gap-2" asChild>
+								<Link href={userRoutes.profileEdit}>
+									<Edit3 className="w-4 h-4" />
+									Edit Profile
+								</Link>
 							</Button>
 						</div>
 					</div>
@@ -341,7 +344,7 @@ export default async function ProfilePage() {
 							className="justify-start gap-2"
 							asChild
 						>
-							<Link href="/home/profile/edit">
+							<Link href={userRoutes.profileEdit}>
 								<Edit3 className="w-4 h-4" />
 								Edit Profile
 							</Link>
@@ -352,7 +355,7 @@ export default async function ProfilePage() {
 							className="justify-start gap-2"
 							asChild
 						>
-							<Link href="/home/profile/security">
+							<Link href={userRoutes.profileSecurity}>
 								<Shield className="w-4 h-4" />
 								Security Settings
 							</Link>
